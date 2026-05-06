@@ -1,0 +1,20 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "java",
+			"name": "FlowNote generate Sample01.",
+			"request": "launch",
+			"mainClass": "jp.empressia.flownote.FlowNote",
+			"args": [
+				"-s", "src/main/java/,src/test/java/",
+				"-o", "doc/flowchart/Flowchart_{2}_{3}.md",
+				"-t", "jp.empressia.flownote.sample.Sample01.",
+			],
+			"projectName": "EmpressiaFlowNote",
+		}
+	]
+}
