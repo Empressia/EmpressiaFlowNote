@@ -55,6 +55,11 @@ public class MermaidMarkdownWriter extends FileWriter {
 	public MermaidMarkdownWriter(String PathFormat) { super(PathFormat); }
 
 	/// コンストラクタ。
+	/// @param PathFormat パスを構成する元となるフォーマット。{0}……完全修飾クラス名、{1}……パッケージ名、{2}……クラス名、{3}……メソッド名。{4}……パラメーターの型一覧。
+	/// @param ParameterClassNameDelimiter パラメーターの型一覧を区切る文字列。
+	public MermaidMarkdownWriter(String PathFormat, String ParameterClassNameDelimiter) { super(PathFormat, ParameterClassNameDelimiter); }
+
+	/// コンストラクタ。
 	/// @param PathSupplier パスを提供する関数。
 	public MermaidMarkdownWriter(PathSupplier PathSupplier) { super(PathSupplier); }
 
