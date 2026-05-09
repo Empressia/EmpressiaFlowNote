@@ -40,10 +40,10 @@ public class SupportUtilities {
 	public static void wrapStandardOutputs(Charset charset) {
 		if(System.out.charset().equals(charset) == false) {
 			System.setOut(new PrintStream(System.out, true, charset));
-		};
+		}
 		if(System.err.charset().equals(charset) == false) {
 			System.setErr(new PrintStream(System.err, true, charset));
-		};
+		}
 	}
 
 	/// MermaidMarkdownを便利に出力します。
