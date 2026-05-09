@@ -1,0 +1,145 @@
+plugins {
+	id "java";
+	id "signing";
+	id "maven-publish";
+	id "jp.empressia.gradle.plugin.misc" version "1.0.5";
+}
+
+ext.moduleName = "jp.empressia.flownote";
+ext.junitVersion = "6.0.3";
+ext.hamcrestVersion = "3.0";
+
+base {
+	archivesName = moduleName;
+}
+
+repositories {
+	if(project.hasProperty("local_network_repository_url")) {
+		maven { url = local_network_repository_url; }
+	}
+	mavenCentral();
+}
+
+sourceSets {
+	tool {
+	}
+}
+
+dependencies {
+	// JavaParser.
+	// 3.28.0 : https://github.com/javaparser/javaparser/issues/4997
+	implementation("com.github.javaparser:javaparser-symbol-solver-core:3.27.1");
+
+	// picocli.
+	implementation("info.picocli:picocli:4.7.7");
+
+	// JUnit6.
+	testImplementation("org.junit.jupiter:junit-jupiter-api:" + junitVersion);
+	testImplementation("org.hamcrest:hamcrest:" + hamcrestVersion);
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:" + junitVersion);
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher:" + junitVersion);
+
+	// FlowNote.
+	toolRuntimeOnly("jp.empressia:jp.empressia.flownote:1.0.0");
+}
+
+tasks.withType(JavaCompile) {
+	options.encoding = "UTF-8";
+	options.release = 21;
+	options.compilerArgs << "-parameters";
+}
+
+java {
+	withJavadocJar();
+	withSourcesJar();
+}
+
+javadoc {
+	options.charSet "UTF-8";
+	options.encoding "UTF-8";
+	options.addBooleanOption("html5", true);
+	options.addStringOption("Xdoclint:none", "-quiet");
+}
+
+test {
+	// use JUnit6.
+	useJUnitPlatform()
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			groupId = "jp.empressia";
+			artifactId = moduleName;
+			from components.java;
+			// for Maven Central.
+			pom {
+				name = "Empressia Flow Note";
+				description = "Flowchart Generation Helper.";
+				url = "https://github.com/Empressia/EmpressiaFlowNote";
+				licenses {
+					license {
+						name = "zlib License";
+						comments = "If you want to use this with a team (multiple people), select the MIT license.";
+					}
+					license {
+						name = "MIT License";
+						comments = "If you want to use this with a team (multiple people), select the MIT license.";
+					}
+				}
+				developers {
+					developer {
+						// The unique ID of this developer in the SCM.
+						id = "Empressia";
+					}
+				}
+				scm {
+					connection = "scm:git:https://github.com/Empressia/EmpressiaFlowNote.git"
+					url = "https://github.com/Empressia/EmpressiaFlowNote.git"
+				}
+			}
+		}
+	}
+	repositories {
+		// publishMavenPublicationToLocalNetworkRepository
+		maven {
+			name = "LocalNetwork";
+			url = local_network_repository_url;
+		}
+		// publishMavenPublicationToMavenCentralRepository
+		maven {
+			name = "MavenCentral";
+			def releasesRepoUrl = sonatype_release_repository_url;
+			def snapshotsRepoUrl = sonatype_snapshot_repository_url;
+			url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl;
+			credentials {
+				username = sonatype_username;
+				password = sonatype_password;
+			}
+		}
+	}
+}
+
+signing {
+	sign publishing.publications.maven;
+}
+
+tasks.register("createFlowchart", JavaExec) {
+	classpath = sourceSets.tool.runtimeClasspath + sourceSets.test.runtimeClasspath;
+	mainClass = "jp.empressia.flownote.FlowNote";
+	args(
+		"-s", "src/main/java/,src/test/java/",
+		"-o", "doc/flowchart/Flowchart_{2}_{3}.md",
+		"-t", "jp.empressia.flownote.sample.Sample01.",
+	);
+}
+
+tasks.register("createFlowchartTest", JavaExec) {
+	classpath = sourceSets.main.runtimeClasspath;
+	mainClass = "jp.empressia.flownote.FlowNote";
+	args(
+		"-s", "src/main/java/,src/test/java/",
+		"-o", "doc/flowchart/Flowchart_{2}_{3}.md",
+		"-t", "jp.empressia.flownote.sample.Sample01.",
+	);
+}
