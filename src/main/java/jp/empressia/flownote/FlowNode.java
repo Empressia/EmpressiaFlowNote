@@ -13,7 +13,7 @@ public class FlowNode {
 	public final String Name;
 
 	/// タイプ（ノードとしての表現が未定のときはnull）。
-	public FlowNodeType Type;
+	public String Type;
 
 	/// 流入ラベル。
 	public final String IncomingLabel;
@@ -22,7 +22,7 @@ public class FlowNode {
 	/// @param ID ID。
 	/// @param Name 名前。
 	/// @param Type タイプ（ノードとしての表現が未定のときはnull）。
-	public FlowNode(String ID, String Name, FlowNodeType Type) {
+	public FlowNode(String ID, String Name, String Type) {
 		this(ID, Name, Type, null);
 	}
 
@@ -31,7 +31,7 @@ public class FlowNode {
 	/// @param Name 名前。
 	/// @param Type タイプ（ノードとしての表現が未定のときはnull）。
 	/// @param IncomingLabel 流入ラベル。
-	public FlowNode(String ID, String Name, FlowNodeType Type, String IncomingLabel) {
+	public FlowNode(String ID, String Name, String Type, String IncomingLabel) {
 		this.ID = ID;
 		this.Name = Name;
 		this.Type = Type;

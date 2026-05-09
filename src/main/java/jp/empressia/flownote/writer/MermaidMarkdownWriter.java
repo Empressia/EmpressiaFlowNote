@@ -129,8 +129,8 @@ public class MermaidMarkdownWriter extends FileWriter {
 		String prefix;
 		String suffix;
 		switch(node.Type) {
-			case Process: { prefix = "["; suffix = "]"; break; }
-			case Decision: {
+			case FlowNodeType.Process: { prefix = "["; suffix = "]"; break; }
+			case FlowNodeType.Decision: {
 				if(RenderDecisionAsProcess) {
 					prefix = "["; suffix = "]";
 				} else {
@@ -138,7 +138,7 @@ public class MermaidMarkdownWriter extends FileWriter {
 				}
 				break;
 			}
-			case Terminator: { prefix = "(["; suffix = "])"; break; }
+			case FlowNodeType.Terminator: { prefix = "(["; suffix = "])"; break; }
 			default: { prefix = "["; suffix = "]"; break; }
 		}
 		this.writeNode(node, prefix, suffix);
