@@ -40,7 +40,7 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher:" + junitVersion);
 
 	// FlowNote.
-	toolRuntimeOnly("jp.empressia:jp.empressia.flownote:1.0.0");
+	toolRuntimeOnly("jp.empressia:jp.empressia.flownote:" + ((version != "unspecified") ? version : "1.0.0"));
 }
 
 tasks.withType(JavaCompile) {
