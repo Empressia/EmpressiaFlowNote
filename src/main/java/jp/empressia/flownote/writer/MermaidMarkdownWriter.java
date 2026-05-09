@@ -113,7 +113,7 @@ public class MermaidMarkdownWriter extends FileWriter {
 	}
 
 	/// Mermaidのヘッダーを出力します。
-	public void writeMermaidHeader() {
+	protected void writeMermaidHeader() {
 		this.PreviousEdge = null;
 		BufferedWriter writer = this.getWriter();
 		String newLine = this.Newline;
@@ -126,7 +126,7 @@ public class MermaidMarkdownWriter extends FileWriter {
 	}
 
 	/// ノードを書き出します。
-	public void writeNode(FlowNode node, String prefix, String suffix) {
+	protected void writeNode(FlowNode node, String prefix, String suffix) {
 		BufferedWriter writer = this.getWriter();
 		String newLine = this.Newline;
 		try {
@@ -138,7 +138,7 @@ public class MermaidMarkdownWriter extends FileWriter {
 	}
 
 	/// ノードを書き出します。
-	public void writeNode(FlowNode node) {
+	protected void writeNode(FlowNode node) {
 		String prefix;
 		String suffix;
 		switch(node.Type) {
@@ -185,7 +185,7 @@ public class MermaidMarkdownWriter extends FileWriter {
 	}
 
 	/// エッジを書き出します。
-	public void writeEdge(FlowEdge edge, Map<Method, FlowChart> charts) {
+	protected void writeEdge(FlowEdge edge, Map<Method, FlowChart> charts) {
 		BufferedWriter writer = this.getWriter();
 		String newLine = this.Newline;
 		try {
@@ -210,7 +210,7 @@ public class MermaidMarkdownWriter extends FileWriter {
 	}
 
 	/// Mermaidのフッターを出力します。
-	public void writeMermaidFooter() {
+	protected void writeMermaidFooter() {
 		BufferedWriter writer = this.getWriter();
 		String newLine = this.Newline;
 		try {
