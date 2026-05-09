@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import jp.empressia.flownote.FlowChart;
@@ -13,6 +12,7 @@ import jp.empressia.flownote.FlowNode;
 import jp.empressia.flownote.FlowNodeType;
 import jp.empressia.flownote.Method;
 import jp.empressia.flownote.SubFlowNode;
+import jp.empressia.flownote.util.NodeUtilities;
 
 /// MarkdownとしてMermaid形式で出力するためのWriter。
 /// @author すふぃあ
@@ -63,19 +63,6 @@ public class MermaidMarkdownWriter extends FileWriter {
 	/// @param PathSupplier パスを提供する関数。
 	public MermaidMarkdownWriter(PathSupplier PathSupplier) { super(PathSupplier); }
 
-	/// nodesからたどれるNodeをすべてcontainerに追加してまとめます。
-	/// @param container 中に追加されます。
-	private static void collectNodes(List<FlowNode> nodes, LinkedList<FlowNode> container) {
-		for(FlowNode node : nodes) {
-			if(node instanceof SubFlowNode sn) {
-				if(sn.Chart == null) { continue; }
-				collectNodes(sn.Chart.Graph.Nodes, container);
-			} else {
-				container.add(node);
-			}
-		}
-	}
-
 	/// 出力します。
 	@Override
 	public void write(Method method, Map<Method, FlowChart> charts) {
@@ -84,7 +71,7 @@ public class MermaidMarkdownWriter extends FileWriter {
 		this.writeMermaidHeader();
 		if(chart != null) {
 			LinkedList<FlowNode> allNodes = new LinkedList<FlowNode>();
-			MermaidMarkdownWriter.collectNodes(chart.Graph.Nodes, allNodes);
+			NodeUtilities.collectNodes(method, charts, allNodes, null);
 			FlowNode startNode = new FlowNode("N-" + "Start" + "-N", this.StartNodeName, FlowNodeType.Terminator);
 			FlowNode finishNode = new FlowNode("N-" + "Finish" + "-N", this.FinishNodeName, FlowNodeType.Terminator);
 			this.writeNode(startNode, "([", "])");

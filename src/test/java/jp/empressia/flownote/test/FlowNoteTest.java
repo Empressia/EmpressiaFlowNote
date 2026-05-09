@@ -68,7 +68,8 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(nullValue()));
 	}
 
@@ -80,7 +81,8 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(nullValue()));
 	}
 
@@ -92,7 +94,8 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
 		assertThat(chart.Graph.Nodes.size(), is(1));
 		assertThat(chart.Graph.Edges.size(), is(0));
@@ -109,7 +112,8 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(nullValue()));
 	}
 
@@ -121,7 +125,8 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
 		assertThat(chart.Graph.Nodes.size(), is(2));
 		assertThat(chart.Graph.Edges.size(), is(1));
@@ -136,7 +141,8 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
 		assertThat(chart.Graph.Nodes.size(), is(3));
 		assertThat(chart.Graph.Edges.size(), is(2));
@@ -151,7 +157,8 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
 		assertThat(chart.Graph.Nodes.size(), is(1));
 		assertThat(chart.Graph.Edges.size(), is(0));
@@ -166,7 +173,8 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
 		assertThat(chart.Graph.Nodes.size(), is(1));
 		assertThat(chart.Graph.Edges.size(), is(0));
@@ -181,7 +189,8 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
 		assertThat(chart.Graph.Nodes.size(), is(1));
 		assertThat(chart.Graph.Edges.size(), is(0));
@@ -196,7 +205,8 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
 		assertThat(chart.Graph.Nodes.size(), is(3));
 		assertThat(chart.Graph.Edges.size(), is(2));
@@ -212,7 +222,8 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
 		assertThat(chart.Graph.Nodes.size(), is(4));
 		assertThat(chart.Graph.Edges.size(), is(3));
@@ -227,7 +238,8 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
 		assertThat(chart.Graph.Nodes.size(), is(5));
 		assertThat(chart.Graph.Edges.size(), is(4));
@@ -242,7 +254,8 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
 		assertThat(chart.Graph.Nodes.size(), is(3));
 		assertThat(chart.Graph.Edges.size(), is(2));
@@ -257,7 +270,8 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(nullValue()));
 	}
 
@@ -269,14 +283,15 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
 		assertThat(chart.Graph.Nodes.size(), is(3));
 		assertThat(chart.Graph.Edges.size(), is(2));
 		assertThat(chart.FinishNodes.size(), is(2));
 		FlowNode node = chart.Graph.Nodes.get(2);
 		if(node instanceof SubFlowNode sn) {
-			FlowChart sc = sn.Chart;
+			FlowChart sc = result.Charts.get(sn.Method);
 			assertThat(sc.Graph.Nodes.size(), is(1));
 			assertThat(sc.Graph.Edges.size(), is(0));
 			assertThat(sc.FinishNodes.size(), is(1));
@@ -293,14 +308,15 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
 		assertThat(chart.Graph.Nodes.size(), is(1));
 		assertThat(chart.Graph.Edges.size(), is(0));
 		assertThat(chart.FinishNodes.size(), is(1));
 		FlowNode node = chart.Graph.Nodes.get(0);
 		if(node instanceof SubFlowNode sn) {
-			FlowChart sc = sn.Chart;
+			FlowChart sc = result.Charts.get(sn.Method);
 			assertThat(sc.Graph.Nodes.size(), is(1));
 			assertThat(sc.Graph.Edges.size(), is(0));
 			assertThat(sc.FinishNodes.size(), is(1));
@@ -317,14 +333,15 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
 		assertThat(chart.Graph.Nodes.size(), is(3));
 		assertThat(chart.Graph.Edges.size(), is(2));
 		assertThat(chart.FinishNodes.size(), is(1));
 		FlowNode node = chart.Graph.Nodes.get(1);
 		if(node instanceof SubFlowNode sn) {
-			FlowChart sc = sn.Chart;
+			FlowChart sc = result.Charts.get(sn.Method);
 			assertThat(sc.Graph.Nodes.size(), is(1));
 			assertThat(sc.Graph.Edges.size(), is(0));
 			assertThat(sc.FinishNodes.size(), is(1));
@@ -341,14 +358,15 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
 		assertThat(chart.Graph.Nodes.size(), is(3));
 		assertThat(chart.Graph.Edges.size(), is(2));
 		assertThat(chart.FinishNodes.size(), is(1));
 		FlowNode node = chart.Graph.Nodes.get(1);
 		if(node instanceof SubFlowNode sn) {
-			FlowChart sc = sn.Chart;
+			FlowChart sc = result.Charts.get(sn.Method);
 			assertThat(sc.Graph.Nodes.size(), is(1));
 			assertThat(sc.Graph.Edges.size(), is(0));
 			assertThat(sc.FinishNodes.size(), is(1));
@@ -365,7 +383,8 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(nullValue()));
 	}
 
@@ -377,15 +396,16 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
 		assertThat(chart.Graph.Nodes.size(), is(4));
 		assertThat(chart.Graph.Edges.size(), is(3));
 		assertThat(chart.FinishNodes.size(), is(2));
 		FlowNode node = chart.Graph.Nodes.get(2);
 		if(node instanceof SubFlowNode sn) {
-			FlowChart sc = sn.Chart;
-			assertThat(sc, is(nullValue()));
+			FlowChart sc = result.Charts.get(sn.Method);
+			assertThat(sc, is(chart));
 		} else {
 			Assertions.fail();
 		}
@@ -399,15 +419,16 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
 		assertThat(chart.Graph.Nodes.size(), is(3));
 		assertThat(chart.Graph.Edges.size(), is(2));
 		assertThat(chart.FinishNodes.size(), is(2));
 		FlowNode node = chart.Graph.Nodes.get(1);
 		if(node instanceof SubFlowNode sn) {
-			FlowChart sc = sn.Chart;
-			assertThat(sc, is(nullValue()));
+			FlowChart sc = result.Charts.get(sn.Method);
+			assertThat(sc, is(chart));
 		} else {
 			Assertions.fail();
 		}
@@ -421,14 +442,16 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
 		assertThat(chart.Graph.Nodes.size(), is(3));
 		assertThat(chart.Graph.Edges.size(), is(2));
 		assertThat(chart.FinishNodes.size(), is(1));
 		FlowNode node = chart.Graph.Nodes.get(1);
 		if(node instanceof SubFlowNode sn) {
-			assertThat(sn.Chart, is(nullValue()));
+			FlowChart sc = result.Charts.get(sn.Method);
+			assertThat(sc, is(chart));
 		} else {
 			Assertions.fail();
 		}
@@ -442,7 +465,8 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(nullValue()));
 	}
 
@@ -454,7 +478,8 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(nullValue()));
 	}
 
@@ -466,7 +491,8 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
 		assertThat(chart.Graph.Nodes.size(), is(1));
 		assertThat(chart.Graph.Edges.size(), is(0));
@@ -481,7 +507,8 @@ public class FlowNoteTest {
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
 		this.getFlowNote().analyze(method, writer);
-		FlowChart chart = writer.Results.poll().Chart;
+		Result result = writer.Results.poll();
+		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
 		assertThat(chart.Graph.Nodes.size(), is(11));
 		assertThat(chart.Graph.Edges.size(), is(10));
@@ -495,7 +522,10 @@ public class FlowNoteTest {
 
 	/// テスト用の分析結果。
 	/// @author すふぃあ
-	public static record Result(Method Method, FlowChart Chart) {}
+	public static record Result(Method Method, Map<Method, FlowChart> Charts) {
+		/// FlowChartを取得します。
+		public FlowChart getChart() { return this.Charts.get(Method); }
+	}
 	/// テスト用のWriter。
 	/// @author すふぃあ
 	public static class TestWriter implements IWriter {
@@ -503,7 +533,7 @@ public class FlowNoteTest {
 		private LinkedList<Result> Results = new LinkedList<Result>();
 		/// 出力は分析結果として内部に保持します。
 		public void write(Method method, Map<Method, FlowChart> charts) {
-			this.Results.push(new Result(method, charts.get(method)));
+			this.Results.push(new Result(method, charts));
 		}
 		/// 分析結果を順に取得します。
 		public Result poll() {

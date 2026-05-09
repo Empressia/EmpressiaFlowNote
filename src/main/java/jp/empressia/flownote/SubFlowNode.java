@@ -7,14 +7,10 @@ public class SubFlowNode extends FlowNode {
 	/// メソッド。
 	public final Method Method;
 
-	/// チャート（未解決のときはnull）。
-	public final FlowChart Chart;
-
 	/// コンストラクタ。
-	public SubFlowNode(String ID, String Name, Method Method, FlowChart Chart) {
+	public SubFlowNode(String ID, String Name, Method Method) {
 		super(ID, Name, null);
 		this.Method = Method;
-		this.Chart = Chart;
 	}
 
 }

@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,6 +46,7 @@ import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeS
 
 import jp.empressia.flownote.javaparser.FlowCommentHelper;
 import jp.empressia.flownote.javaparser.MethodCache;
+import jp.empressia.flownote.util.NodeUtilities;
 import jp.empressia.flownote.util.SupportUtilities;
 import jp.empressia.flownote.writer.IWriter;
 import jp.empressia.flownote.writer.MermaidMarkdownWriter;
@@ -341,7 +341,7 @@ public class FlowNote {
 			FlowChart chart = this.parseMethod(m);
 			if(chart != null) {
 				// 再帰呼び出しなどだけでからっぽ。
-				if(FlowNote.emptyChart(method, this.MethodFlowCharts, null)) {
+				if(NodeUtilities.emptyChart(method, this.MethodFlowCharts, null)) {
 					chart = null;
 				}
 			}
@@ -399,26 +399,6 @@ public class FlowNote {
 			FlowNote.this.CallStack.pop();
 		}
 		return chart;
-	}
-
-	/// MethodのChartの中身にノードがあるかを確認します。
-	/// @param calledMethods 確認用のコンテナです。最初に空指定で呼ぶことで内部で使用されます。nullのときは自動で作られます。
-	private static boolean emptyChart(Method method, Map<Method, FlowChart> charts, Set<Method> calledMethods) {
-		calledMethods = (calledMethods == null) ? new HashSet<Method>() : calledMethods;
-		calledMethods.add(method);
-		boolean hasEffectiveNode = false;
-		FlowChart chart = charts.get(method);
-		for(FlowNode node : chart.Graph.Nodes) {
-			if(node instanceof SubFlowNode sn) {
-				Method m = sn.Method;
-				if(calledMethods.contains(m)) { continue; }
-				hasEffectiveNode = (FlowNote.emptyChart(sn.Method, charts, calledMethods) == false);
-			} else {
-				hasEffectiveNode = true;
-			}
-			if(hasEffectiveNode) { break; }
-		}
-		return (hasEffectiveNode == false);
 	}
 
 	/// 親の完全修飾クラス名に対して、継承、実装しているクラスを対応させたマップを作成します。
@@ -694,16 +674,15 @@ public class FlowNote {
 					if(unanalyzed) {
 						// メソッドがまだ未走査なら、走査します。
 						FlowChart chart = parseMethod(callTarget);
-						subFlowNode = (chart != null) ? new SubFlowNode(null, null, method, chart) : null;
+						subFlowNode = (chart != null) ? new SubFlowNode(null, null, method) : null;
 					} else {
 						if(FlowNote.this.CallStack.contains(method)) {
 							// コールスタックに存在するなら、読む必要はありません。
-							// ただし、結果は未定になります。
-							subFlowNode = new SubFlowNode(null, null, method, null);
+							subFlowNode = new SubFlowNode(null, null, method);
 						} else {
 							// 走査済みから、取ってきます。
 							FlowChart chart = FlowNote.this.MethodFlowCharts.get(method);
-							subFlowNode = (chart != null) ? new SubFlowNode(null, null, method, chart) : null;
+							subFlowNode = (chart != null) ? new SubFlowNode(null, null, method) : null;
 						}
 					}
 					if(subFlowNode != null) {
