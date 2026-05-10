@@ -253,7 +253,7 @@ public class FlowNote {
 				for(Comment comment : comments) {
 					FlowComment fc = this.CommentHelper.convert(comment);
 					if(fc != null) {
-						String methodQualifiedSignature = method.FullClassName + "." + method.Name + "(" + String.join(", ", method.ParameterClassNames) + ")";
+						String methodQualifiedSignature = method.FullClassName + "#" + method.Name + "(" + String.join(", ", method.ParameterClassNames) + ")";
 						FlowNode node = this.convert(fc, methodQualifiedSignature, ++nodeNumber);
 						flowContainer.put(comment.getBegin().get().line, node);
 					}

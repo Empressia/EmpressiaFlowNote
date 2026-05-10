@@ -124,7 +124,7 @@ public class MermaidMarkdownWriter extends FileWriter {
 		BufferedWriter writer = this.getWriter();
 		String newLine = this.Newline;
 		try {
-			String ID = this.NodeIDPrefix + node.ID.replaceAll("[<>()]", "\\$").replaceAll(" ", "");
+			String ID = this.NodeIDPrefix + node.ID.replaceAll("#", ".").replaceAll("[<>()]", "\\$").replaceAll(" ", "");
 			writer.append("	" + ID + prefix + node.Name + suffix + newLine);
 		} catch(IOException ex) {
 			throw new UncheckedIOException(ex);
@@ -191,8 +191,8 @@ public class MermaidMarkdownWriter extends FileWriter {
 				for(FlowNode to : tos) {
 					FlowEdge realEdge = new FlowEdge(from, to);
 					if(realEdge.equals(PreviousEdge)) { continue; }
-					String FromID = this.NodeIDPrefix + from.ID.replaceAll("[<>()]", "\\$").replaceAll(" ", "");
-					String ToID = this.NodeIDPrefix + to.ID.replaceAll("[<>()]", "\\$").replaceAll(" ", "");
+					String FromID = this.NodeIDPrefix + from.ID.replaceAll("#", ".").replaceAll("[<>()]", "\\$").replaceAll(" ", "");
+					String ToID = this.NodeIDPrefix + to.ID.replaceAll("#", ".").replaceAll("[<>()]", "\\$").replaceAll(" ", "");
 					String Label = (to.IncomingLabel != null) ? "|" + to.IncomingLabel + "|": "";
 					writer.append("	" + FromID + " --> " + Label + ToID + newLine);
 					this.PreviousEdge = realEdge;
