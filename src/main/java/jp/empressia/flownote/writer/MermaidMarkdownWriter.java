@@ -72,8 +72,8 @@ public class MermaidMarkdownWriter extends FileWriter {
 		if(chart != null) {
 			LinkedList<FlowNode> allNodes = new LinkedList<FlowNode>();
 			NodeUtilities.collectNodes(method, charts, allNodes, null);
-			FlowNode startNode = new FlowNode("N-" + "Start" + "-N", this.StartNodeName, FlowNodeType.Terminator);
-			FlowNode finishNode = new FlowNode("N-" + "Finish" + "-N", this.FinishNodeName, FlowNodeType.Terminator);
+			FlowNode startNode = new FlowNode("N-" + "Start", this.StartNodeName, FlowNodeType.Terminator);
+			FlowNode finishNode = new FlowNode("N-" + "Finish", this.FinishNodeName, FlowNodeType.Terminator);
 			this.writeNode(startNode);
 			for(FlowNode node : allNodes) {
 				this.writeNode(node);
