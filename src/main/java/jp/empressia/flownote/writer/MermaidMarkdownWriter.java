@@ -21,6 +21,9 @@ public class MermaidMarkdownWriter extends FileWriter {
 	/// 改行用の初期値。
 	public static final String DEFAULT_NEWLINE = "\r\n";
 
+	/// ノードIDのPrefix用の初期値。
+	public static final String DEFAULT_NODE_ID_PREFIX = "N-";
+
 	/// 改行用の初期値。
 	public static final String DEFAULT_START_NODE_NAME = "開始";
 
@@ -30,6 +33,10 @@ public class MermaidMarkdownWriter extends FileWriter {
 	/// 改行文字列。
 	private String Newline = MermaidMarkdownWriter.DEFAULT_NEWLINE;
 	public MermaidMarkdownWriter newline(String Newline) { this.Newline = Newline; return this; }
+
+	/// ノードIDのPrefixです。
+	private String NodeIDPrefix = MermaidMarkdownWriter.DEFAULT_NODE_ID_PREFIX;
+	public MermaidMarkdownWriter nodeIDPrefix(String NodeIDPrefix) { this.NodeIDPrefix = NodeIDPrefix; return this; }
 
 	/// 開始ノードの名前。
 	private String StartNodeName = MermaidMarkdownWriter.DEFAULT_START_NODE_NAME;
@@ -72,8 +79,8 @@ public class MermaidMarkdownWriter extends FileWriter {
 		if(chart != null) {
 			LinkedList<FlowNode> allNodes = new LinkedList<FlowNode>();
 			NodeUtilities.collectNodes(method, charts, allNodes, null);
-			FlowNode startNode = new FlowNode("N-" + "Start", this.StartNodeName, FlowNodeType.Terminator);
-			FlowNode finishNode = new FlowNode("N-" + "Finish", this.FinishNodeName, FlowNodeType.Terminator);
+			FlowNode startNode = new FlowNode("Start", this.StartNodeName, FlowNodeType.Terminator);
+			FlowNode finishNode = new FlowNode("Finish", this.FinishNodeName, FlowNodeType.Terminator);
 			this.writeNode(startNode);
 			for(FlowNode node : allNodes) {
 				this.writeNode(node);
@@ -117,7 +124,7 @@ public class MermaidMarkdownWriter extends FileWriter {
 		BufferedWriter writer = this.getWriter();
 		String newLine = this.Newline;
 		try {
-			String ID = node.ID.replaceAll("[<>()]", "\\$").replaceAll(" ", "");
+			String ID = this.NodeIDPrefix + node.ID.replaceAll("[<>()]", "\\$").replaceAll(" ", "");
 			writer.append("	" + ID + prefix + node.Name + suffix + newLine);
 		} catch(IOException ex) {
 			throw new UncheckedIOException(ex);
@@ -184,8 +191,8 @@ public class MermaidMarkdownWriter extends FileWriter {
 				for(FlowNode to : tos) {
 					FlowEdge realEdge = new FlowEdge(from, to);
 					if(realEdge.equals(PreviousEdge)) { continue; }
-					String FromID = from.ID.replaceAll("[<>()]", "\\$").replaceAll(" ", "");
-					String ToID = to.ID.replaceAll("[<>()]", "\\$").replaceAll(" ", "");
+					String FromID = this.NodeIDPrefix + from.ID.replaceAll("[<>()]", "\\$").replaceAll(" ", "");
+					String ToID = this.NodeIDPrefix + to.ID.replaceAll("[<>()]", "\\$").replaceAll(" ", "");
 					String Label = (to.IncomingLabel != null) ? "|" + to.IncomingLabel + "|": "";
 					writer.append("	" + FromID + " --> " + Label + ToID + newLine);
 					this.PreviousEdge = realEdge;

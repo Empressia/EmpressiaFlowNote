@@ -356,7 +356,7 @@ public class FlowNote {
 
 	/// ノードを生成します。
 	protected FlowNode convert(FlowComment comment, String methodQualifiedSignature, int nodeNumber) {
-		String ID = "N-" + methodQualifiedSignature + "-" + nodeNumber;
+		String ID = methodQualifiedSignature + "-" + nodeNumber;
 		String Name = comment.Message;
 		String IncomingLabel = comment.Label;
 		FlowNode node = new FlowNode(ID, Name, FlowNodeType.Process, IncomingLabel);
