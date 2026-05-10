@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import jp.empressia.flownote.FlowNote;
 import jp.empressia.flownote.Method;
+import jp.empressia.flownote.parser.SourceParser;
 import jp.empressia.flownote.writer.IWriter;
 
 /// サポート用のユーティリティです。
@@ -50,7 +51,7 @@ public class SupportUtilities {
 	public static void writeMermaidMarkdown(String[] sourceRootPathStrings, Predicate<Method> f, IWriter writer) {
 		List<Path> sourceRootPaths = SupportUtilities.generateSourceRootPaths(sourceRootPathStrings);
 		List<Path> referencePaths = SupportUtilities.generateReferencePaths();
-		FlowNote.Parser.Builder.create(sourceRootPaths, referencePaths).build().parse().analyze(f, writer);
+		FlowNote.create(SourceParser.Builder.create(sourceRootPaths, referencePaths).build()).parse().analyze(f, writer);
 	}
 
 }

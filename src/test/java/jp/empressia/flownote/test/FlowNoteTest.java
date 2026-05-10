@@ -20,6 +20,7 @@ import jp.empressia.flownote.FlowNode;
 import jp.empressia.flownote.FlowNote;
 import jp.empressia.flownote.Method;
 import jp.empressia.flownote.SubFlowNode;
+import jp.empressia.flownote.parser.SourceParser;
 import jp.empressia.flownote.sample.Sample01;
 import jp.empressia.flownote.util.SupportUtilities;
 import jp.empressia.flownote.writer.IWriter;
@@ -37,10 +38,12 @@ public class FlowNoteTest {
 		FlowNote flowNote = this.FlowNote;
 		if(flowNote == null) {
 			String[] sourceRootPathStrings = { "src/main/java/", "src/test/java/" };
-			flowNote = jp.empressia.flownote.FlowNote.Parser.Builder.create(
-				SupportUtilities.generateSourceRootPaths(sourceRootPathStrings),
-				SupportUtilities.generateReferencePaths()
-			).build().parse();
+			flowNote = jp.empressia.flownote.FlowNote.create(
+				SourceParser.Builder.create(
+					SupportUtilities.generateSourceRootPaths(sourceRootPathStrings),
+					SupportUtilities.generateReferencePaths()
+				).build()
+			).parse();
 			this.FlowNote = flowNote;
 		}
 		return flowNote;

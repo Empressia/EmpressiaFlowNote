@@ -1,8 +1,5 @@
 package jp.empressia.flownote;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,10 +15,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.github.javaparser.JavaParser;
-import com.github.javaparser.JavaParserAdapter;
 import com.github.javaparser.ParserConfiguration;
-import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
@@ -35,17 +29,12 @@ import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.stmt.SwitchStmt;
 import com.github.javaparser.ast.stmt.TryStmt;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import com.github.javaparser.resolution.TypeSolver;
 import com.github.javaparser.resolution.UnsolvedSymbolException;
 import com.github.javaparser.resolution.declarations.ResolvedMethodDeclaration;
-import com.github.javaparser.symbolsolver.JavaSymbolSolver;
-import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
-import com.github.javaparser.symbolsolver.resolution.typesolvers.JarTypeSolver;
-import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
-import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
 
 import jp.empressia.flownote.javaparser.FlowCommentHelper;
 import jp.empressia.flownote.javaparser.MethodCache;
+import jp.empressia.flownote.parser.SourceParser;
 import jp.empressia.flownote.util.NodeUtilities;
 import jp.empressia.flownote.util.SupportUtilities;
 import jp.empressia.flownote.writer.IWriter;
@@ -85,6 +74,7 @@ public class FlowNote {
 		List<Path> referencePaths = SupportUtilities.generateReferencePaths();
 		String languageVersion = configuration.LanguageVersion;
 		String markerKeyword = configuration.MarkerKeyword;
+		FlowCommentHelper commentHelper = new FlowCommentHelper(markerKeyword);
 		String pathFormat = configuration.OutputFilePathFormat;
 		if((pathFormat == null) || pathFormat.isEmpty()) {
 			System.err.println("出力するパスのフォーマットが指定されていません。");
@@ -127,13 +117,26 @@ public class FlowNote {
 			.startNodeName(startNodeName)
 			.finishNodeName(finishNodeName)
 			.renderDecisionAsProcess(renderDecisionAsProcess);
-		new FlowNote.Parser.Builder(sourceRootPaths, referencePaths)
-			.languageVersion(languageVersion)
-			.markerKeyword(markerKeyword)
-			.build()
+		FlowNote
+			.create(
+				SourceParser.Builder.create(sourceRootPaths, referencePaths)
+					.languageVersion(languageVersion)
+					.build(),
+				commentHelper
+			)
 			.parse()
 			.showResolutionFailureDetails(showResolutionFailureDetails)
 			.analyze(methodFilter, writer);
+	}
+
+	/// ソースコードを読み込みます。
+	public FlowNote parse() {
+		// 内容は、外部ライブラリの情報が含まれるから、インターフェースに出せない。
+		SourceParser.Result result = this.Parser.parse();
+		this.Classes = result.Classes;
+		this.ClassMap = FlowNote.createClassMap(result.Classes);
+		this.MethodCache = result.MethodCache;
+		return this;
 	}
 
 	/// メソッド呼び出し解決に失敗したときの詳細を表示するかどうか。
@@ -143,6 +146,9 @@ public class FlowNote {
 		this.ShowResolutionFailureDetails = ShowResolutionFailureDetails;
 		return this;
 	}
+
+	/// ソースコードの解析用。
+	private SourceParser Parser;
 
 	/// ソースコードのクラス一覧。
 	private List<ClassOrInterfaceDeclaration> Classes;
@@ -161,151 +167,19 @@ public class FlowNote {
 	private Stack<Method> CallStack;
 
 	/// コンストラクタ。
-	private FlowNote(FlowCommentHelper CommentHelper) {
-		this.CommentHelper = CommentHelper;
+	private FlowNote(SourceParser parser, FlowCommentHelper commentHelper) {
+		this.Parser = parser;
+		this.CommentHelper = commentHelper;
 		this.MethodFlowCharts = new HashMap<Method, FlowChart>();
 		this.CallStack = new Stack<Method>();
 	}
-
-	/// FlowNoteを構成するためのParser。
-	/// @author すふぃあ
-	public static class Parser {
-		/// ソースコードのルートパス。
-		private List<Path> SourceRootPaths;
-		/// 参照と解決用のパス。
-		private List<Path> ReferencePaths;
-		/// ソースコードのJava言語仕様のバージョン。
-		private ParserConfiguration.LanguageLevel LanguageVersion;
-		/// FlowNote用のコメントを検出するためのHelper。
-		private FlowCommentHelper CommentHelper;
-		/// 解析する対象のファイルパスを選ぶフィルター。
-		private Predicate<Path> PathFilter;
-
-		/// コンストラクタ。
-		private Parser(List<Path> SourceRootPaths, List<Path> ReferencePaths, ParserConfiguration.LanguageLevel LanguageVersion, FlowCommentHelper CommentHelper, Predicate<Path> PathFilter) {
-			this.SourceRootPaths = SourceRootPaths;
-			this.ReferencePaths = ReferencePaths;
-			this.LanguageVersion = LanguageVersion;
-			this.CommentHelper = CommentHelper;
-			this.PathFilter = PathFilter;
-		}
-
-		/// ソースコードを解析してFlowNoteを作成します。
-		public FlowNote parse() {
-			List<Path> sourceRootPaths = this.SourceRootPaths;
-			List<Path> referencePaths = this.ReferencePaths;
-			ParserConfiguration.LanguageLevel languageVersion = this.LanguageVersion;
-			FlowCommentHelper commentHelper = this.CommentHelper;
-			Predicate<Path> pathFilter = this.PathFilter;
-			FlowNote flowNote = new FlowNote(commentHelper);
-			Iterable<TypeSolver> sourcesSolvers = sourceRootPaths.stream().map(p -> {
-				TypeSolver s = new JavaParserTypeSolver(p);
-				return s;
-			})::iterator;
-			Iterable<TypeSolver> referenceSolvers = referencePaths.stream().map(p -> {
-				TypeSolver s;
-				try {
-					s = ((Files.isRegularFile(p) && p.getFileName().toString().endsWith(".jar")) ? new JarTypeSolver(p) : new JavaParserTypeSolver(p));
-				} catch(IOException ex) {
-					throw new UncheckedIOException(ex);
-				}
-				return s;
-			})::iterator;
-			CombinedTypeSolver combinedSolver = new CombinedTypeSolver();
-			for(TypeSolver solver : sourcesSolvers) {
-				combinedSolver.add(solver);
-			}
-			for(TypeSolver solver : referenceSolvers) {
-				combinedSolver.add(solver);
-			}
-			combinedSolver.add(new ReflectionTypeSolver());
-			JavaSymbolSolver resolver = new JavaSymbolSolver(combinedSolver);
-			ParserConfiguration config = new ParserConfiguration();
-			config.setLanguageLevel(languageVersion);
-			config.setSymbolResolver(resolver);
-			JavaParserAdapter parser = new JavaParserAdapter(new JavaParser(config));
-			LinkedList<ClassOrInterfaceDeclaration> classes = new LinkedList<ClassOrInterfaceDeclaration>();
-			MethodCache methodCache = new MethodCache();
-			try(
-				Stream<Path> filePaths = sourceRootPaths.stream().flatMap(p -> {
-					Stream<Path> paths;
-					try {
-						paths = Files.walk(p);
-					} catch(IOException ex) {
-						throw new UncheckedIOException(ex);
-					}
-					return paths;
-				}).filter(p -> Files.isRegularFile(p) && p.getFileName().toString().endsWith(".java")).filter(p -> pathFilter.test(p))
-			) {
-				Iterable<Path> filePath_it = filePaths::iterator;
-				for(Path filePath : filePath_it) {
-					CompilationUnit ut;
-					try {
-						ut = parser.parse(filePath);
-					} catch(IOException ex) {
-						throw new UncheckedIOException(ex);
-					}
-					// Flow: 構造をJavaParserから変換する。
-					for(ClassOrInterfaceDeclaration c : ut.findAll(ClassOrInterfaceDeclaration.class)) {
-						classes.add(c);
-						for(MethodDeclaration m : c.findAll(MethodDeclaration.class)) {
-							methodCache.register(m);
-						}
-					}
-				}
-			}
-			flowNote.Classes = classes;
-			flowNote.ClassMap = FlowNote.createClassMap(classes);
-			flowNote.MethodCache = methodCache;
-			return flowNote;
-		}
-
-		/// FlowNoteを構成するためのParserのBuilderです。
-		/// @author すふぃあ
-		public static class Builder {
-			/// ソースコードのルートパス。
-			private List<Path> SourceRootPaths;
-			/// 参照と解決用のパス。
-			private List<Path> ReferencePaths;
-			/// ソースコードのJava言語仕様のバージョン。
-			private ParserConfiguration.LanguageLevel LanguageVersion;
-			/// FlowNote用のコメントを検出するためのHelper。
-			private FlowCommentHelper CommentHelper;
-			/// 解析する対象のファイルパスを選ぶフィルター。
-			private Predicate<Path> PathFilter;
-			/// コンストラクタ。
-			private Builder(List<Path> SourceRootPaths, List<Path> ReferencePaths) {
-				this.SourceRootPaths = SourceRootPaths;
-				this.ReferencePaths = ReferencePaths;
-			}
-			/// FlowNoteを構成するためのParserのBuilderを作成します。
-			/// @param SourceRootPaths ソースコードのルートパス。
-			/// @param ReferencePaths 参照と解決用のパス。
-			public static Builder create(List<Path> SourceRootPaths, List<Path> ReferencePaths) {
-				return new Builder(SourceRootPaths, ReferencePaths);
-			}
-			/// ソースコードのJava言語仕様のバージョンを指定します。
-			public Builder languageVersion(String LanguageVersion) { this.LanguageVersion = ParserConfiguration.LanguageLevel.valueOf(LanguageVersion); return this; }
-			/// ソースコードのJava言語仕様のバージョンを指定します。
-			public Builder languageVersion(int LanguageVersion) {
-				this.LanguageVersion = ParserConfiguration.LanguageLevel.valueOf("Java_" + LanguageVersion); return this;
-			}
-			/// FlowNote用のコメントのマーカーキーワードを指定します。
-			public Builder markerKeyword(String MarkerKeyword) { this.CommentHelper = new FlowCommentHelper(MarkerKeyword); return this; }
-			/// 解析する対象のファイルパスを選ぶフィルター。
-			public Builder pathFilter(Predicate<Path> PathFilter) { this.PathFilter = PathFilter; return this; }
-			/// Parserを構築します。
-			public FlowNote.Parser build() {
-				return new FlowNote.Parser(
-					this.SourceRootPaths,
-					this.ReferencePaths,
-					(this.LanguageVersion != null) ? this.LanguageVersion : ParserConfiguration.LanguageLevel.valueOf(FlowNote.DEFAULT_JAVA_LANGUAGE_VERSION),
-					(this.CommentHelper != null) ? this.CommentHelper : new FlowCommentHelper(FlowNote.DEFAULT_MARKER_KEYWORD),
-					(this.PathFilter != null) ? this.PathFilter : ((p) -> true)
-				);
-			}
-		}
-
+	/// FlowNoteを作成します。
+	public static FlowNote create(SourceParser parser) {
+		return new FlowNote(parser, new FlowCommentHelper(FlowNote.DEFAULT_MARKER_KEYWORD));
+	}
+	/// FlowNoteを作成します。
+	public static FlowNote create(SourceParser parser, FlowCommentHelper commentHelper) {
+		return new FlowNote(parser, commentHelper);
 	}
 
 	public void analyzeAll(IWriter writer) {
@@ -379,7 +253,7 @@ public class FlowNote {
 				for(Comment comment : comments) {
 					FlowComment fc = this.CommentHelper.convert(comment);
 					if(fc != null) {
-						String methodQualifiedSignature = m.resolve().getQualifiedSignature();
+						String methodQualifiedSignature = method.FullClassName + "." + method.Name + "(" + String.join(", ", method.ParameterClassNames) + ")";
 						FlowNode node = this.convert(fc, methodQualifiedSignature, ++nodeNumber);
 						flowContainer.put(comment.getBegin().get().line, node);
 					}

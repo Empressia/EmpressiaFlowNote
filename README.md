@@ -117,10 +117,12 @@ build、parseを経て、analayzeメソッドを呼び出すことで出力し�
 MermaidMarkdownWriterを使用することで、Mardkdown用にMermaid形式で出力します。  
 
 ```java
-jp.empressia.flownote.FlowNote.Parser.Builder.create(
-	SupportUtilities.generateSourceRootPaths(FlowNote.DEFALUT_SOURCE_ROOT_PATH),
-	SupportUtilities.generateReferencePaths()
-).build().parse().analyzeAll(new MermaidMarkdownWriter("doc/flowchart/Flowchart_{2}_{3}.md"));
+FlowNote.create(
+	Parser.Builder.create(
+		SupportUtilities.generateSourceRootPaths(FlowNote.DEFALUT_SOURCE_ROOT_PATH),
+		SupportUtilities.generateReferencePaths()
+	).build()
+).parse().analyzeAll(new MermaidMarkdownWriter("doc/flowchart/Flowchart_{2}_{3}.md"));
 ```
 
 各クラスを継承するなどして調整できます。  
