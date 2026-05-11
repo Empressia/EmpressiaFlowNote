@@ -228,8 +228,14 @@ public class FlowNote {
 		}
 	}
 
-	/// ノードを生成します。
-	protected FlowNode convert(FlowComment comment, String methodQualifiedSignature, int nodeNumber) {
+	/// メソッドの一意な表現を生成します。
+	protected String generateQualifiedSignature(Method method) {
+		return NodeUtilities.generateQualifiedSignature(method);
+	}
+
+	/// FlowCommentによるノードを生成します。
+	protected FlowNode createFlowCommentNode(FlowComment comment, Method method, int nodeNumber) {
+		String methodQualifiedSignature = this.generateQualifiedSignature(method);
 		String ID = methodQualifiedSignature + "-" + nodeNumber;
 		String Name = comment.Message;
 		String IncomingLabel = comment.Label;
@@ -237,6 +243,34 @@ public class FlowNote {
 		return node;
 	}
 
+	/// SubFlowNodeを生成します。
+	protected SubFlowNode createSubFlowNode(Method method, Method targetMethod, int nodeNumber) {
+		String methodQualifiedSignature = this.generateQualifiedSignature(method);
+		String targetMethodQualifiedSignature = this.generateQualifiedSignature(targetMethod);
+		String ID = methodQualifiedSignature + "-" + targetMethodQualifiedSignature + "-" + nodeNumber;
+		SubFlowNode node = new SubFlowNode(ID, null, targetMethod);
+		return node;
+	}
+
+	/// メソッドの解析用Context。
+	/// @author すふぃあ
+	private static class MethodContext {
+		/// 対象となっているメソッド。
+		public final Method Method;
+		/// メソッド内のコメントによるFlowNode（キーは行番号）。
+		public final TreeMap<Integer, FlowNode> FlowCommentNodes;
+		/// SubFlowNode用のCounter。
+		private int SubFlowNodeCounter;
+		/// SubFlowNode用の番号。
+		public int nextSubFlowNodeNumber() { return ++this.SubFlowNodeCounter; }
+		/// コンストラクタ。
+		public MethodContext(Method Method, TreeMap<Integer, FlowNode> FlowCommentNodes) {
+			this.Method = Method;
+			this.FlowCommentNodes = FlowCommentNodes;
+			this.SubFlowNodeCounter = 0;
+		}
+
+	}
 	private FlowChart parseMethod(MethodDeclaration m) {
 		Method method = this.MethodCache.getMethod(m);
 		boolean parsed = this.MethodFlowCharts.containsKey(method);
@@ -247,18 +281,18 @@ public class FlowNote {
 			this.MethodFlowCharts.put(method, null);
 			BlockStmt body = m.getBody().orElse(null);
 			if(body != null) {
-				TreeMap<Integer, FlowNode> flowContainer = new TreeMap<Integer, FlowNode>();
+				TreeMap<Integer, FlowNode> flowCommentNodes = new TreeMap<Integer, FlowNode>();
 				List<Comment> comments = body.getAllContainedComments();
 				int nodeNumber = 0;
 				for(Comment comment : comments) {
 					FlowComment fc = this.CommentHelper.convert(comment);
 					if(fc != null) {
-						String methodQualifiedSignature = method.FullClassName + "#" + method.Name + "(" + String.join(", ", method.ParameterClassNames) + ")";
-						FlowNode node = this.convert(fc, methodQualifiedSignature, ++nodeNumber);
-						flowContainer.put(comment.getBegin().get().line, node);
+						FlowNode node = this.createFlowCommentNode(fc, method, ++nodeNumber);
+						flowCommentNodes.put(comment.getBegin().get().line, node);
 					}
 				}
-				PartialFlowChart c = this.parseStatement(body, method, flowContainer);
+				MethodContext context = new MethodContext(method, flowCommentNodes);
+				PartialFlowChart c = this.parseStatement(body, context);
 				chart = (c != null) ? new FlowChart(
 					new FlowGraph(c.Nodes.stream().toList(), c.Edges),
 					c.FirstNode,
@@ -296,7 +330,9 @@ public class FlowNote {
 		return map;
 	}
 
-	private PartialFlowChart parseStatement(Statement s, Method method, TreeMap<Integer, FlowNode> flowContainer) {
+	private PartialFlowChart parseStatement(Statement s, MethodContext context) {
+		Method method = context.Method;
+		TreeMap<Integer, FlowNode> flowCommentNodes = context.FlowCommentNodes;
 		// 行順に対応するためにVisitorを使用する。
 		// ただし、Visitorは、コメントを単独で検出できない？から、外から一覧をもらって混ぜ込む。
 		var visitor = new VoidVisitorAdapter<Void>() {
@@ -329,7 +365,7 @@ public class FlowNote {
 					if(parentComment == null) {
 						// ここの手前までのコメントをFlushする。
 						{
-							Collection<FlowNode> toNodes = flowContainer.subMap(this.PreviousLine, false, start, false).values();
+							Collection<FlowNode> toNodes = flowCommentNodes.subMap(this.PreviousLine, false, start, false).values();
 							PartialFlowChart c = create(this.Chart, toNodes);
 							this.Chart = c;
 						}
@@ -343,13 +379,13 @@ public class FlowNote {
 				if(chained == false) {
 					// ここの手前までのコメントをFlushする（ifでは直前のコメントも手元で扱うので注意する）。
 					{
-						Collection<FlowNode> toNodes = flowContainer.subMap(this.PreviousLine, false, commentLine, false).values();
+						Collection<FlowNode> toNodes = flowCommentNodes.subMap(this.PreviousLine, false, commentLine, false).values();
 						PartialFlowChart c = create(this.Chart, toNodes);
 						this.Chart = c;
 					}
 				}
 				// 分岐ノードを生成する（差し替える）。
-				FlowNode branchNode = flowContainer.get(commentLine);
+				FlowNode branchNode = flowCommentNodes.get(commentLine);
 				{
 					List<FlowNode> toNodes = List.of(branchNode);
 					PartialFlowChart c = create(this.Chart, toNodes);
@@ -374,13 +410,13 @@ public class FlowNote {
 				};
 				// True分岐を生成する。
 				Statement s1 = n.getThenStmt();
-				PartialFlowChart chart1 = parseStatement(s1, method, flowContainer);
+				PartialFlowChart chart1 = parseStatement(s1, context);
 				this.PreviousLine = s1.getEnd().get().line;
 				// False分岐を生成する。
 				Statement s2 = n.getElseStmt().orElse(null);
 				PartialFlowChart chart2;
 				if(s2 != null) {
-					chart2 = parseStatement(s2, method, flowContainer);
+					chart2 = parseStatement(s2, context);
 					this.PreviousLine = s2.getEnd().get().line;
 				} else {
 					chart2 = null;
@@ -457,7 +493,7 @@ public class FlowNote {
 				if(this.PreviousLine > start) { return; }
 				// ここの手前までのコメントをFlushします。
 				{
-					Collection<FlowNode> toNodes = flowContainer.subMap(this.PreviousLine, false, start, false).values();
+					Collection<FlowNode> toNodes = flowCommentNodes.subMap(this.PreviousLine, false, start, false).values();
 					PartialFlowChart c = create(this.Chart, toNodes);
 					this.Chart = c;
 				}
@@ -542,21 +578,21 @@ public class FlowNote {
 							parent = child;
 						}
 					}
-					Method method = FlowNote.this.MethodCache.getMethod(callTarget);
-					boolean unanalyzed = (FlowNote.this.MethodFlowCharts.containsKey(method) == false);
+					Method targetMethod = FlowNote.this.MethodCache.getMethod(callTarget);
+					boolean unanalyzed = (FlowNote.this.MethodFlowCharts.containsKey(targetMethod) == false);
 					SubFlowNode subFlowNode;
 					if(unanalyzed) {
 						// メソッドがまだ未走査なら、走査します。
 						FlowChart chart = parseMethod(callTarget);
-						subFlowNode = (chart != null) ? new SubFlowNode(null, null, method) : null;
+						subFlowNode = (chart != null) ? FlowNote.this.createSubFlowNode(method, targetMethod, context.nextSubFlowNodeNumber()) : null;
 					} else {
-						if(FlowNote.this.CallStack.contains(method)) {
+						if(FlowNote.this.CallStack.contains(targetMethod)) {
 							// コールスタックに存在するなら、読む必要はありません。
-							subFlowNode = new SubFlowNode(null, null, method);
+							subFlowNode = FlowNote.this.createSubFlowNode(method, targetMethod, context.nextSubFlowNodeNumber());
 						} else {
 							// 走査済みから、取ってきます。
-							FlowChart chart = FlowNote.this.MethodFlowCharts.get(method);
-							subFlowNode = (chart != null) ? new SubFlowNode(null, null, method) : null;
+							FlowChart chart = FlowNote.this.MethodFlowCharts.get(targetMethod);
+							subFlowNode = (chart != null) ? FlowNote.this.createSubFlowNode(method, targetMethod, context.nextSubFlowNodeNumber()) : null;
 						}
 					}
 					if(subFlowNode != null) {
@@ -591,7 +627,7 @@ public class FlowNote {
 		PartialFlowChart chart = visitor.Chart;
 		{
 			// 残りを出力します。
-			Collection<FlowNode> toNodes = flowContainer.subMap(previousLine, false, s.getEnd().get().line, false).values();
+			Collection<FlowNode> toNodes = flowCommentNodes.subMap(previousLine, false, s.getEnd().get().line, false).values();
 			PartialFlowChart c = create(chart, toNodes);
 			chart = c;
 		}
