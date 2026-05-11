@@ -25,7 +25,7 @@ public class NodeUtilities {
 			if(node instanceof SubFlowNode sn) {
 				Method m = sn.Method;
 				if(calledMethods.contains(m)) { continue; }
-				hasEffectiveNode = (NodeUtilities.emptyChart(sn.Method, charts, calledMethods) == false);
+				hasEffectiveNode = (NodeUtilities.emptyChart(m, charts, calledMethods) == false);
 			} else {
 				hasEffectiveNode = true;
 			}
@@ -45,7 +45,7 @@ public class NodeUtilities {
 			if(node instanceof SubFlowNode sn) {
 				Method m = sn.Method;
 				if(calledMethods.contains(m)) { continue; }
-				NodeUtilities.collectNodes(sn.Method, charts, container, calledMethods);
+				NodeUtilities.collectNodes(m, charts, container, calledMethods);
 			} else {
 				container.add(node);
 			}
