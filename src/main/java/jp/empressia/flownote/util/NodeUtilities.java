@@ -13,7 +13,12 @@ import jp.empressia.flownote.SubFlowNode;
 /// 複雑なノード操作用のユーティリティです。
 /// @author すふぃあ
 public class NodeUtilities {
-	
+
+	/// メソッドの一意な表現を生成します。
+	public static String generateQualifiedSignature(Method method) {
+		return method.FullClassName + "#" + method.Name + "(" + String.join(",", method.ParameterClassNames) + ")";
+	}
+
 	/// MethodのChartの中身にノードがあるかを確認します。
 	/// @param calledMethods 確認用のコンテナです。最初に空指定で呼ぶことで内部で使用されます。nullのときは自動で作られます。
 	public static boolean emptyChart(Method method, Map<Method, FlowChart> charts, Set<Method> calledMethods) {
