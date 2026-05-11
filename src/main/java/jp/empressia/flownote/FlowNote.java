@@ -258,7 +258,7 @@ public class FlowNote {
 						flowContainer.put(comment.getBegin().get().line, node);
 					}
 				}
-				PartialFlowChart c = this.parseStatement(body, flowContainer);
+				PartialFlowChart c = this.parseStatement(body, method, flowContainer);
 				chart = (c != null) ? new FlowChart(
 					new FlowGraph(c.Nodes.stream().toList(), c.Edges),
 					c.FirstNode,
@@ -296,7 +296,7 @@ public class FlowNote {
 		return map;
 	}
 
-	private PartialFlowChart parseStatement(Statement s, TreeMap<Integer, FlowNode> flowContainer) {
+	private PartialFlowChart parseStatement(Statement s, Method method, TreeMap<Integer, FlowNode> flowContainer) {
 		// 行順に対応するためにVisitorを使用する。
 		// ただし、Visitorは、コメントを単独で検出できない？から、外から一覧をもらって混ぜ込む。
 		var visitor = new VoidVisitorAdapter<Void>() {
@@ -374,13 +374,13 @@ public class FlowNote {
 				};
 				// True分岐を生成する。
 				Statement s1 = n.getThenStmt();
-				PartialFlowChart chart1 = parseStatement(s1, flowContainer);
+				PartialFlowChart chart1 = parseStatement(s1, method, flowContainer);
 				this.PreviousLine = s1.getEnd().get().line;
 				// False分岐を生成する。
 				Statement s2 = n.getElseStmt().orElse(null);
 				PartialFlowChart chart2;
 				if(s2 != null) {
-					chart2 = parseStatement(s2, flowContainer);
+					chart2 = parseStatement(s2, method, flowContainer);
 					this.PreviousLine = s2.getEnd().get().line;
 				} else {
 					chart2 = null;
