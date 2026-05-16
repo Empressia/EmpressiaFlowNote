@@ -102,19 +102,23 @@ publishing {
 	}
 	repositories {
 		// publishMavenPublicationToLocalNetworkRepository
-		maven {
-			name = "LocalNetwork";
-			url = local_network_repository_url;
+		if(project.hasProperty("local_network_repository_url")) {
+			maven {
+				name = "LocalNetwork";
+				url = local_network_repository_url;
+			}
 		}
 		// publishMavenPublicationToMavenCentralRepository
-		maven {
-			name = "MavenCentral";
-			def releasesRepoUrl = sonatype_release_repository_url;
-			def snapshotsRepoUrl = sonatype_snapshot_repository_url;
-			url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl;
-			credentials {
-				username = sonatype_username;
-				password = sonatype_password;
+		if(project.hasProperty("sonatype_release_repository_url")) {
+			maven {
+				name = "MavenCentral";
+				def releasesRepoUrl = sonatype_release_repository_url;
+				def snapshotsRepoUrl = sonatype_snapshot_repository_url;
+				url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl;
+				credentials {
+					username = sonatype_username;
+					password = sonatype_password;
+				}
 			}
 		}
 	}
