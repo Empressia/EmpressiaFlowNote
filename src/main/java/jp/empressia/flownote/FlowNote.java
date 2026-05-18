@@ -393,12 +393,11 @@ public class FlowNote {
 				}
 				this.PreviousLine = commentLine;
 				LinkedList<FlowNode> returnNodes = new LinkedList<FlowNode>();
-				@SuppressWarnings("unused")
 				Function<ReturnStmt, IfStmt> findIf = (rn) -> {
 					Node node = rn;
 					while(true) {
 						node = node.getParentNode().orElse(null);
-						switch (node) {
+						switch(node) {
 							case null -> { return null; }
 							case MethodDeclaration m -> { return null; }
 							case IfStmt ifn -> { return ifn; }
