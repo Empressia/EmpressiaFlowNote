@@ -125,7 +125,8 @@ public class MermaidMarkdownWriter extends FileWriter {
 		String newLine = this.Newline;
 		try {
 			String ID = this.NodeIDPrefix + node.ID.replaceAll("#", ".").replaceAll("[<>()]", "\\$").replaceAll(" ", "");
-			writer.append("	" + ID + prefix + node.Name + suffix + newLine);
+			String name = MermaidMarkdownWriter.escapeName(node.Name);
+			writer.append("	" + ID + prefix + name + suffix + newLine);
 		} catch(IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -213,6 +214,11 @@ public class MermaidMarkdownWriter extends FileWriter {
 			throw new UncheckedIOException(ex);
 		}
 		this.PreviousEdge = null;
+	}
+
+	/// ノードの名前をMermaid用にエスケープします。
+	public static String escapeName(String name) {
+		return "\"" + name.replace("&", "&amp;").replace("\"", "&quot;") + "\"";
 	}
 
 }
