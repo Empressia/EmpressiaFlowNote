@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import jp.empressia.flownote.FlowChart;
 import jp.empressia.flownote.FlowEdge;
@@ -124,7 +125,7 @@ public class MermaidMarkdownWriter extends FileWriter {
 		BufferedWriter writer = this.getWriter();
 		String newLine = this.Newline;
 		try {
-			String ID = this.NodeIDPrefix + node.ID.replaceAll("#", ".").replaceAll("[<>()]", "\\$").replaceAll(" ", "");
+			String ID = this.NodeIDPrefix + MermaidMarkdownWriter.convertNodeID(node.ID);
 			String name = MermaidMarkdownWriter.escapeName(node.Name);
 			writer.append("	" + ID + prefix + name + suffix + newLine);
 		} catch(IOException ex) {
@@ -192,8 +193,8 @@ public class MermaidMarkdownWriter extends FileWriter {
 				for(FlowNode to : tos) {
 					FlowEdge realEdge = new FlowEdge(from, to);
 					if(realEdge.equals(PreviousEdge)) { continue; }
-					String FromID = this.NodeIDPrefix + from.ID.replaceAll("#", ".").replaceAll("[<>()]", "\\$").replaceAll(" ", "");
-					String ToID = this.NodeIDPrefix + to.ID.replaceAll("#", ".").replaceAll("[<>()]", "\\$").replaceAll(" ", "");
+					String FromID = this.NodeIDPrefix + MermaidMarkdownWriter.convertNodeID(from.ID);
+					String ToID = this.NodeIDPrefix + MermaidMarkdownWriter.convertNodeID(to.ID);
 					String Label = (to.IncomingLabel != null) ? "|" + to.IncomingLabel + "|": "";
 					writer.append("	" + FromID + " --> " + Label + ToID + newLine);
 					this.PreviousEdge = realEdge;
@@ -214,6 +215,17 @@ public class MermaidMarkdownWriter extends FileWriter {
 			throw new UncheckedIOException(ex);
 		}
 		this.PreviousEdge = null;
+	}
+
+	/// ノードのIDの一部の置換用正規表現です。
+	private static Pattern NodeIDRegex = Pattern.compile("[<>()]");
+	/// ノードのIDをMermaid用に変換します。
+	private static String convertNodeID(String ID) {
+		String converted = ID;
+		converted = converted.replace("#", ".");
+		converted = MermaidMarkdownWriter.NodeIDRegex.matcher(converted).replaceAll("\\$");
+		converted = converted.replace(" ", "");
+		return converted;
 	}
 
 	/// ノードの名前をMermaid用にエスケープします。
