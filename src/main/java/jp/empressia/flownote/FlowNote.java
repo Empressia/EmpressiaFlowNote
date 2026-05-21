@@ -111,12 +111,16 @@ public class FlowNote {
 		String startNodeName = configuration.StartNodeName;
 		String finishNodeName = configuration.FinishNodeName;
 		boolean renderDecisionAsProcess = configuration.RenderDecisionAsProcess;
+		boolean renderSubFlowNodeAsGroup = configuration.RenderSubflowAsGroup;
+		String basePackageName = configuration.BasePackageName;
 		boolean showResolutionFailureDetails = configuration.ShowResolutionFailureDetails;
 		MermaidMarkdownWriter writer = new MermaidMarkdownWriter(pathFormat)
 			.newline(newline)
 			.startNodeName(startNodeName)
 			.finishNodeName(finishNodeName)
-			.renderDecisionAsProcess(renderDecisionAsProcess);
+			.renderDecisionAsProcess(renderDecisionAsProcess)
+			.renderSubflowAsGroup(renderSubFlowNodeAsGroup)
+			.basePackageName(basePackageName);
 		FlowNote
 			.create(
 				SourceParser.Builder.create(sourceRootPaths, referencePaths)
@@ -728,6 +732,12 @@ public class FlowNote {
 		/// 分岐・判断・デシジョンのノードをプロセスのノードとして表現します。
 		@Option(names={"-RenderDecisionAsProcess", "--render-decision-as-process"}, description="分岐・判断・デシジョンのノードをプロセスのノードとして表現します。")
 		public boolean RenderDecisionAsProcess;
+		/// サブフローのノードをグループとして表現します。
+		@Option(names={"-RenderSubflowAsGroup", "--render-subflow--as-group"}, description="サブフローのノードをグループとして表現します。")
+		public boolean RenderSubflowAsGroup;
+		/// 基準となるパッケージの名前を指定します。
+		@Option(names={"-BasePackageName", "--base-package-name"}, description="基準となるパッケージの名前を指定します。")
+		public String BasePackageName;
 		/// メソッド呼び出し解決に失敗したときの詳細を表示します。
 		@Option(names={"-ShowResolutionFailureDetails", "--show-resolution-failure-details"}, description="メソッド呼び出し解決に失敗したときの詳細を表示します。")
 		public boolean ShowResolutionFailureDetails;
