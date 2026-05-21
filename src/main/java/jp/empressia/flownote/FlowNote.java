@@ -726,10 +726,10 @@ public class FlowNote {
 		@Option(names={"-FinishNodeName", "--finish-node-name", "-fn"}, description="終了ノードの名前を指定します（初期値は『終了』）。")
 		public String FinishNodeName = MermaidMarkdownWriter.DEFAULT_FINISH_NODE_NAME;
 		/// 分岐・判断・デシジョンのノードをプロセスのノードとして表現します。
-		@Option(names={"-RenderDecisionAsProcess", "-render-decision-as-process"}, description="分岐・判断・デシジョンのノードをプロセスのノードとして表現します。")
+		@Option(names={"-RenderDecisionAsProcess", "--render-decision-as-process"}, description="分岐・判断・デシジョンのノードをプロセスのノードとして表現します。")
 		public boolean RenderDecisionAsProcess;
 		/// メソッド呼び出し解決に失敗したときの詳細を表示します。
-		@Option(names={"-ShowResolutionFailureDetails", "-show-resolution-failure-details"}, description="メソッド呼び出し解決に失敗したときの詳細を表示します。")
+		@Option(names={"-ShowResolutionFailureDetails", "--show-resolution-failure-details"}, description="メソッド呼び出し解決に失敗したときの詳細を表示します。")
 		public boolean ShowResolutionFailureDetails;
 	}
 
