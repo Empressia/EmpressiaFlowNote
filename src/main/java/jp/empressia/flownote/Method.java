@@ -15,15 +15,12 @@ public class Method {
 
 	public final List<String> ParameterClassNames;
 
-	public final List<String> AnnotationClassNames;
-
-	public Method(String FullClassName, String PackageName, String Name, List<String> ParameterClassNames, List<String> AnnotationClassNames) {
+	public Method(String FullClassName, String PackageName, String Name, List<String> ParameterClassNames) {
 		this.FullClassName = FullClassName;
 		this.PackageName = PackageName;
 		this.ClassName = FullClassName.substring(PackageName.length());
 		this.Name = Name;
 		this.ParameterClassNames = ParameterClassNames;
-		this.AnnotationClassNames = AnnotationClassNames;
 	}
 
 	@Override

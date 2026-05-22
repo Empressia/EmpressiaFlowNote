@@ -125,8 +125,7 @@ public class SourceParser {
 			c.getFullyQualifiedName().get(),
 			ut.getPackageDeclaration().map(p -> p.getNameAsString()).orElse(""),
 			m.getNameAsString(),
-			m.getParameters().stream().map(p -> p.getTypeAsString()).toList(),
-			m.getAnnotations().stream().map(a -> a.getName().asString()).toList()
+			m.getParameters().stream().map(p -> p.getTypeAsString()).toList()
 		);
 		return method;
 	}

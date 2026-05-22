@@ -51,7 +51,7 @@ public class FlowNoteTest {
 
 	/// サンプルのMethodを作成します。
 	private static Method createMethod(Class<?> c, String methodName) {
-		return new Method(c.getCanonicalName(), c.getPackageName(), methodName, List.of(), List.of());
+		return new Method(c.getCanonicalName(), c.getPackageName(), methodName, List.of());
 	}
 
 	/// プロジェクトを解析できる。
