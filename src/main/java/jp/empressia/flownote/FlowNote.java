@@ -32,8 +32,8 @@ import com.github.javaparser.resolution.UnsolvedSymbolException;
 import com.github.javaparser.resolution.declarations.ResolvedMethodDeclaration;
 
 import jp.empressia.flownote.javaparser.FlowCommentHelper;
+import jp.empressia.flownote.parser.JavaParserSourceParser;
 import jp.empressia.flownote.parser.MethodCache;
-import jp.empressia.flownote.parser.SourceParser;
 import jp.empressia.flownote.util.NodeUtilities;
 import jp.empressia.flownote.util.SupportUtilities;
 import jp.empressia.flownote.writer.IWriter;
@@ -68,7 +68,7 @@ public class FlowNote {
 		String[] sourceRootPathStrings = configuration.SourceRootPaths.split("\\s*,\\s*");
 		List<Path> sourceRootPaths = SupportUtilities.generateSourceRootPaths(sourceRootPathStrings);
 		List<Path> referencePaths = SupportUtilities.generateReferencePaths();
-		String languageVersion = configuration.LanguageVersion;
+		Integer languageVersion = configuration.LanguageVersion;
 		String markerKeyword = configuration.MarkerKeyword;
 		FlowCommentHelper commentHelper = new FlowCommentHelper(markerKeyword);
 		String pathFormat = configuration.OutputFilePathFormat;
@@ -119,7 +119,7 @@ public class FlowNote {
 			.basePackageName(basePackageName);
 		FlowNote
 			.create(
-				SourceParser.Builder.create(sourceRootPaths, referencePaths)
+				JavaParserSourceParser.Builder.create(sourceRootPaths, referencePaths)
 					.languageVersion(languageVersion)
 					.build(),
 				commentHelper
@@ -132,7 +132,7 @@ public class FlowNote {
 	/// ソースコードを読み込みます。
 	public FlowNote parse() {
 		// 内容は、外部ライブラリの情報が含まれるから、インターフェースに出せない。
-		SourceParser.Result result = this.Parser.parse();
+		JavaParserSourceParser.Result result = this.Parser.parse();
 		this.Classes = result.Classes;
 		this.ClassMap = FlowNote.createClassMap(result.Classes);
 		this.MethodCache = result.MethodCache;
@@ -148,7 +148,7 @@ public class FlowNote {
 	}
 
 	/// ソースコードの解析用。
-	private SourceParser Parser;
+	private JavaParserSourceParser Parser;
 
 	/// ソースコードのクラス一覧。
 	private List<ClassOrInterfaceDeclaration> Classes;
@@ -167,18 +167,18 @@ public class FlowNote {
 	private Stack<Method> CallStack;
 
 	/// コンストラクタ。
-	private FlowNote(SourceParser parser, FlowCommentHelper commentHelper) {
+	private FlowNote(JavaParserSourceParser parser, FlowCommentHelper commentHelper) {
 		this.Parser = parser;
 		this.CommentHelper = commentHelper;
 		this.MethodFlowCharts = new HashMap<Method, FlowChart>();
 		this.CallStack = new Stack<Method>();
 	}
 	/// FlowNoteを作成します。
-	public static FlowNote create(SourceParser parser) {
+	public static FlowNote create(JavaParserSourceParser parser) {
 		return new FlowNote(parser, new FlowCommentHelper(FlowNote.DEFAULT_MARKER_KEYWORD));
 	}
 	/// FlowNoteを作成します。
-	public static FlowNote create(SourceParser parser, FlowCommentHelper commentHelper) {
+	public static FlowNote create(JavaParserSourceParser parser, FlowCommentHelper commentHelper) {
 		return new FlowNote(parser, commentHelper);
 	}
 
@@ -712,9 +712,9 @@ public class FlowNote {
 		/// 参照と解決用のパスを『,』で区切って指定します（指定なしでクラスパスから自動）。
 		@Option(names={"-ReferencePaths", "--reference-paths", "-r"}, description="参照と解決用のパスを『,』で区切って指定します（指定なしで自動）。")
 		public String ReferenceRootPaths;
-		/// ソースコードのJava言語仕様のバージョンを指定します（『Java_17』、『Java_21』など）（指定なしでサポートしている最新バージョン）。
-		@Option(names={"-LanguageVersion", "--language-version", "-l"}, description="ソースコードのJava言語仕様のバージョンを指定します（『Java_17』、『Java_21』など）（指定なしでサポートしている最新バージョン）。")
-		public String LanguageVersion = SourceParser.DEFAULT_JAVA_LANGUAGE_VERSION;
+		/// ソースコードのJava言語仕様のバージョンを指定します（指定なしでサポートしている最新バージョンか現在のランタイム依存となります）。
+		@Option(names={"-LanguageVersion", "--language-version", "-l"}, description="ソースコードのJava言語仕様のバージョンを指定します（指定なしでサポートしている最新バージョンか現在のランタイム依存となります）。")
+		public Integer LanguageVersion;
 		/// FlowNote用のコメントのマーカーキーワードを指定します（初期値は『Flow』）（『-』を含むと思った動きをしない可能性があります）。
 		@Option(names={"-MarkerKeyword", "--marker-keyword", "-c"}, description="FlowNote用のコメントのマーカーキーワードを指定します（初期値は『Flow』）（『-』を含むと思った動きをしない可能性があります）。")
 		public String MarkerKeyword = FlowNote.DEFAULT_MARKER_KEYWORD;
