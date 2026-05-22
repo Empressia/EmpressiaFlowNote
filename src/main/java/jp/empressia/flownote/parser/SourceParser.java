@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import com.github.javaparser.JavaParser;
@@ -23,7 +22,6 @@ import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeS
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
 
 import jp.empressia.flownote.Method;
-import jp.empressia.flownote.javaparser.MethodCache;
 
 /// FlowNoteを構成するためのParser。
 /// @author すふぃあ
@@ -38,15 +36,12 @@ public class SourceParser {
 	private List<Path> ReferencePaths;
 	/// ソースコードのJava言語仕様のバージョン。
 	private ParserConfiguration.LanguageLevel LanguageVersion;
-	/// 解析する対象のファイルパスを選ぶフィルター。
-	private Predicate<Path> PathFilter;
 
 	/// コンストラクタ。
-	private SourceParser(List<Path> SourceRootPaths, List<Path> ReferencePaths, ParserConfiguration.LanguageLevel LanguageVersion, Predicate<Path> PathFilter) {
+	private SourceParser(List<Path> SourceRootPaths, List<Path> ReferencePaths, ParserConfiguration.LanguageLevel LanguageVersion) {
 		this.SourceRootPaths = SourceRootPaths;
 		this.ReferencePaths = ReferencePaths;
 		this.LanguageVersion = LanguageVersion;
-		this.PathFilter = PathFilter;
 	}
 
 	/// ソースコードを解析してFlowNoteを作成します。
@@ -54,7 +49,6 @@ public class SourceParser {
 		List<Path> sourceRootPaths = this.SourceRootPaths;
 		List<Path> referencePaths = this.ReferencePaths;
 		ParserConfiguration.LanguageLevel languageVersion = this.LanguageVersion;
-		Predicate<Path> pathFilter = this.PathFilter;
 		Iterable<TypeSolver> sourcesSolvers = sourceRootPaths.stream().map(p -> {
 			TypeSolver s = new JavaParserTypeSolver(p);
 			return s;
@@ -92,7 +86,7 @@ public class SourceParser {
 					throw new UncheckedIOException(ex);
 				}
 				return paths;
-			}).filter(p -> Files.isRegularFile(p) && p.getFileName().toString().endsWith(".java")).filter(p -> pathFilter.test(p))
+			}).filter(p -> Files.isRegularFile(p) && p.getFileName().toString().endsWith(".java"))
 		) {
 			Iterable<Path> filePath_it = filePaths::iterator;
 			for(Path filePath : filePath_it) {
@@ -139,8 +133,6 @@ public class SourceParser {
 		private List<Path> ReferencePaths;
 		/// ソースコードのJava言語仕様のバージョン。
 		private ParserConfiguration.LanguageLevel LanguageVersion;
-		/// 解析する対象のファイルパスを選ぶフィルター。
-		private Predicate<Path> PathFilter;
 		/// コンストラクタ。
 		private Builder(List<Path> SourceRootPaths, List<Path> ReferencePaths) {
 			this.SourceRootPaths = SourceRootPaths;
@@ -158,15 +150,12 @@ public class SourceParser {
 		public Builder languageVersion(int LanguageVersion) {
 			this.LanguageVersion = ParserConfiguration.LanguageLevel.valueOf("Java_" + LanguageVersion); return this;
 		}
-		/// 解析する対象のファイルパスを選ぶフィルター。
-		public Builder pathFilter(Predicate<Path> PathFilter) { this.PathFilter = PathFilter; return this; }
 		/// Parserを構築します。
 		public SourceParser build() {
 			return new SourceParser(
 				this.SourceRootPaths,
 				this.ReferencePaths,
-				(this.LanguageVersion != null) ? this.LanguageVersion : ParserConfiguration.LanguageLevel.valueOf(SourceParser.DEFAULT_JAVA_LANGUAGE_VERSION),
-				(this.PathFilter != null) ? this.PathFilter : ((p) -> true)
+				(this.LanguageVersion != null) ? this.LanguageVersion : ParserConfiguration.LanguageLevel.valueOf(SourceParser.DEFAULT_JAVA_LANGUAGE_VERSION)
 			);
 		}
 	}
