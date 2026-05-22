@@ -32,7 +32,7 @@ import com.github.javaparser.resolution.UnsolvedSymbolException;
 import com.github.javaparser.resolution.declarations.ResolvedMethodDeclaration;
 
 import jp.empressia.flownote.javaparser.FlowCommentHelper;
-import jp.empressia.flownote.javaparser.MethodCache;
+import jp.empressia.flownote.parser.MethodCache;
 import jp.empressia.flownote.parser.SourceParser;
 import jp.empressia.flownote.util.NodeUtilities;
 import jp.empressia.flownote.util.SupportUtilities;

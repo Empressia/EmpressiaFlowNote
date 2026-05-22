@@ -1,4 +1,4 @@
-package jp.empressia.flownote.javaparser;
+package jp.empressia.flownote.parser;
 
 import java.util.HashMap;
 import java.util.function.Function;
