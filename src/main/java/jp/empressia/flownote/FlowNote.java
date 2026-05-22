@@ -15,7 +15,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.github.javaparser.ParserConfiguration;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
@@ -47,9 +46,6 @@ public class FlowNote {
 
 	/// ソースコードのルートパス。
 	public static final String DEFALUT_SOURCE_ROOT_PATH = "src/main/java/";
-
-	/// ソースコードのJava言語仕様のバージョン。
-	public static final String DEFAULT_JAVA_LANGUAGE_VERSION = ParserConfiguration.LanguageLevel.values()[ParserConfiguration.LanguageLevel.values().length - 1].name();
 
 	/// FlowNote用のコメントのマーカーキーワード。
 	public static final String DEFAULT_MARKER_KEYWORD = "Flow";
@@ -160,7 +156,7 @@ public class FlowNote {
 	private Map<String, ClassOrInterfaceDeclaration> ClassMap;
 
 	/// メソッドのキャッシュ。
-	private MethodCache MethodCache;
+	private MethodCache<MethodDeclaration> MethodCache;
 
 	/// FlowNote用のコメントを検出するためのHelper。
 	private FlowCommentHelper CommentHelper;
@@ -215,7 +211,7 @@ public class FlowNote {
 	private void analyzeInternal(List<Method> methods, IWriter writer) {
 		LinkedHashMap<Method, FlowChart> charts = new LinkedHashMap<Method, FlowChart>();
 		for(Method method : methods) {
-			MethodDeclaration m = this.MethodCache.getMethodDeclaration(method);
+			MethodDeclaration m = this.MethodCache.getParserMethod(method);
 			FlowChart chart = this.parseMethod(m);
 			if(chart != null) {
 				// 再帰呼び出しなどだけでからっぽ。
@@ -718,7 +714,7 @@ public class FlowNote {
 		public String ReferenceRootPaths;
 		/// ソースコードのJava言語仕様のバージョンを指定します（『Java_17』、『Java_21』など）（指定なしでサポートしている最新バージョン）。
 		@Option(names={"-LanguageVersion", "--language-version", "-l"}, description="ソースコードのJava言語仕様のバージョンを指定します（『Java_17』、『Java_21』など）（指定なしでサポートしている最新バージョン）。")
-		public String LanguageVersion = FlowNote.DEFAULT_JAVA_LANGUAGE_VERSION;
+		public String LanguageVersion = SourceParser.DEFAULT_JAVA_LANGUAGE_VERSION;
 		/// FlowNote用のコメントのマーカーキーワードを指定します（初期値は『Flow』）（『-』を含むと思った動きをしない可能性があります）。
 		@Option(names={"-MarkerKeyword", "--marker-keyword", "-c"}, description="FlowNote用のコメントのマーカーキーワードを指定します（初期値は『Flow』）（『-』を含むと思った動きをしない可能性があります）。")
 		public String MarkerKeyword = FlowNote.DEFAULT_MARKER_KEYWORD;

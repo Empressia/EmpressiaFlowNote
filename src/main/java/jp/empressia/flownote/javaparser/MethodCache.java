@@ -1,62 +1,52 @@
 package jp.empressia.flownote.javaparser;
 
 import java.util.HashMap;
-
-import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.body.MethodDeclaration;
+import java.util.function.Function;
 
 import jp.empressia.flownote.Method;
 
 /// Method表現の変換と維持を担当します。
 /// @author すふぃあ
-public class MethodCache {
+public class MethodCache<PM> {
 
 	/// キャッシュ。
-	private HashMap<MethodDeclaration, Method> MethodCache;
+	private HashMap<PM, Method> MethodCache;
 
 	/// キャッシュ。
-	private HashMap<Method, MethodDeclaration> MethodDeclarationCache;
+	private HashMap<Method, PM> PMCache;
+
+	private Function<PM, Method> MethodResolver;
 
 	/// コンストラクタ。
-	public MethodCache() {
-		this.MethodCache = new HashMap<MethodDeclaration, Method>();
-		this.MethodDeclarationCache = new HashMap<Method, MethodDeclaration>();
+	public MethodCache(Function<PM, Method> MethodResolver) {
+		this.MethodCache = new HashMap<PM, Method>();
+		this.PMCache = new HashMap<Method, PM>();
+		this.MethodResolver = MethodResolver;
 	}
 
 	/// 必要に応じて登録します。
-	public void register(MethodDeclaration m) {
+	public void register(PM m) {
 		boolean contains = this.MethodCache.containsKey(m);
 		if(contains) { return; }
 		this.MethodCache.put(m, null);
-		@SuppressWarnings("unchecked")
-		ClassOrInterfaceDeclaration c = m.findAncestor(ClassOrInterfaceDeclaration.class).orElse(null);
-		if(c == null) { return; }
-		CompilationUnit ut = c.findCompilationUnit().orElse(null);
-		if(ut == null) { return; }
-		Method method = new Method(
-			c.getFullyQualifiedName().get(),
-			ut.getPackageDeclaration().map(p -> p.getNameAsString()).orElse(""),
-			m.getNameAsString(),
-			m.getParameters().stream().map(p -> p.getTypeAsString()).toList(),
-			m.getAnnotations().stream().map(a -> a.getName().asString()).toList()
-		);
+		Method method = this.MethodResolver.apply(m);
+		if(method == null) { return; }
 		this.MethodCache.put(m, method);
-		this.MethodDeclarationCache.put(method, m);
+		this.PMCache.put(method, m);
 	}
 
 	/// 取得します。
-	public Method getMethod(MethodDeclaration m) {
+	public Method getMethod(PM m) {
 		return this.MethodCache.get(m);
 	}
 
 	/// 取得します。
-	public MethodDeclaration getMethodDeclaration(Method method) {
-		return this.MethodDeclarationCache.get(method);
+	public PM getParserMethod(Method method) {
+		return this.PMCache.get(method);
 	}
 
 	/// 必要に応じて登録して取得します。
-	public Method registerAndGet(MethodDeclaration m) {
+	public Method registerAndGet(PM m) {
 		this.register(m);
 		return this.getMethod(m);
 	}

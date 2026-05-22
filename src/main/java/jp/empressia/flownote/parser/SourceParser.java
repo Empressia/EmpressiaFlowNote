@@ -22,12 +22,15 @@ import com.github.javaparser.symbolsolver.resolution.typesolvers.JarTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
 
-import jp.empressia.flownote.FlowNote;
+import jp.empressia.flownote.Method;
 import jp.empressia.flownote.javaparser.MethodCache;
 
 /// FlowNoteを構成するためのParser。
 /// @author すふぃあ
 public class SourceParser {
+
+	/// ソースコードのJava言語仕様のバージョン。
+	public static final String DEFAULT_JAVA_LANGUAGE_VERSION = ParserConfiguration.LanguageLevel.values()[ParserConfiguration.LanguageLevel.values().length - 1].name();
 
 	/// ソースコードのルートパス。
 	private List<Path> SourceRootPaths;
@@ -79,7 +82,7 @@ public class SourceParser {
 		config.setSymbolResolver(resolver);
 		JavaParserAdapter parser = new JavaParserAdapter(new JavaParser(config));
 		LinkedList<ClassOrInterfaceDeclaration> classes = new LinkedList<ClassOrInterfaceDeclaration>();
-		MethodCache methodCache = new MethodCache();
+		MethodCache<MethodDeclaration> methodCache = new MethodCache<MethodDeclaration>(SourceParser::convert);
 		try(
 			Stream<Path> filePaths = sourceRootPaths.stream().flatMap(p -> {
 				Stream<Path> paths;
@@ -109,6 +112,23 @@ public class SourceParser {
 			}
 		}
 		return new Result(classes, methodCache);
+	}
+
+	/// JavaParserのMethodDeclarationからMethodに変換します。所属不明の場合はnullです。
+	private static Method convert(MethodDeclaration m) {
+		@SuppressWarnings("unchecked")
+		ClassOrInterfaceDeclaration c = m.findAncestor(ClassOrInterfaceDeclaration.class).orElse(null);
+		if(c == null) { return null; }
+		CompilationUnit ut = c.findCompilationUnit().orElse(null);
+		if(ut == null) { return null; }
+		Method method = new Method(
+			c.getFullyQualifiedName().get(),
+			ut.getPackageDeclaration().map(p -> p.getNameAsString()).orElse(""),
+			m.getNameAsString(),
+			m.getParameters().stream().map(p -> p.getTypeAsString()).toList(),
+			m.getAnnotations().stream().map(a -> a.getName().asString()).toList()
+		);
+		return method;
 	}
 
 	/// FlowNoteを構成するためのParserのBuilderです。
@@ -146,7 +166,7 @@ public class SourceParser {
 			return new SourceParser(
 				this.SourceRootPaths,
 				this.ReferencePaths,
-				(this.LanguageVersion != null) ? this.LanguageVersion : ParserConfiguration.LanguageLevel.valueOf(FlowNote.DEFAULT_JAVA_LANGUAGE_VERSION),
+				(this.LanguageVersion != null) ? this.LanguageVersion : ParserConfiguration.LanguageLevel.valueOf(SourceParser.DEFAULT_JAVA_LANGUAGE_VERSION),
 				(this.PathFilter != null) ? this.PathFilter : ((p) -> true)
 			);
 		}
@@ -160,10 +180,10 @@ public class SourceParser {
 		/// ソースコードのクラス一覧。
 		public final LinkedList<ClassOrInterfaceDeclaration> Classes;
 		/// メソッドのキャッシュ。
-		public final MethodCache MethodCache;
+		public final MethodCache<MethodDeclaration> MethodCache;
 
 		/// コンストラクタ。
-		public Result(LinkedList<ClassOrInterfaceDeclaration> Classes, MethodCache MethodCache) {
+		public Result(LinkedList<ClassOrInterfaceDeclaration> Classes, MethodCache<MethodDeclaration> MethodCache) {
 			this.Classes = Classes;
 			this.MethodCache = MethodCache;
 		}
