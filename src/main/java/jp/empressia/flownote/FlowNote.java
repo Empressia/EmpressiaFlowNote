@@ -285,7 +285,7 @@ public class FlowNote {
 				List<Comment> comments = body.getAllContainedComments();
 				int nodeNumber = 0;
 				for(Comment comment : comments) {
-					FlowComment fc = this.CommentHelper.convert(comment);
+					FlowComment fc = this.CommentHelper.convert(comment.asString());
 					if(fc != null) {
 						FlowNode node = this.createFlowCommentNode(fc, method, ++nodeNumber);
 						flowCommentNodes.put(comment.getBegin().get().line, node);
@@ -345,14 +345,14 @@ public class FlowNote {
 				// 手前にFlowNodeIfがあれば、その対象がここってしてもいいかも。
 				Comment comment = n.getComment().orElse(null);
 				boolean chained = false;
-				if((comment == null) || (FlowNote.this.CommentHelper.convert(comment) == null)) {
+				if((comment == null) || (FlowNote.this.CommentHelper.convert(comment.asString()) == null)) {
 					Comment parentComment = null;
 					{
 						Node node = n;
 						while((node = node.getParentNode().orElse(null)) != null) {
 							if((node != null) && (node instanceof IfStmt ifn)) {
 								parentComment = ifn.getComment().orElse(null);
-								if((parentComment == null) || (FlowNote.this.CommentHelper.convert(parentComment) == null)) {
+								if((parentComment == null) || (FlowNote.this.CommentHelper.convert(parentComment.asString()) == null)) {
 									continue;
 								} else {
 									break;
