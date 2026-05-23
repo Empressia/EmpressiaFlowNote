@@ -1,4 +1,4 @@
-package jp.empressia.flownote.javaparser;
+package jp.empressia.flownote.parser;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 import jp.empressia.flownote.FlowNote;
 import jp.empressia.flownote.Method;
-import jp.empressia.flownote.parser.JavaParserSourceParser;
+import jp.empressia.flownote.javaparser.JavaParserSourceParser;
 import jp.empressia.flownote.writer.IWriter;
 
 /// サポート用のユーティリティです。

@@ -20,7 +20,7 @@ import jp.empressia.flownote.FlowNode;
 import jp.empressia.flownote.FlowNote;
 import jp.empressia.flownote.Method;
 import jp.empressia.flownote.SubFlowNode;
-import jp.empressia.flownote.parser.JavaParserSourceParser;
+import jp.empressia.flownote.javaparser.JavaParserSourceParser;
 import jp.empressia.flownote.sample.Sample01;
 import jp.empressia.flownote.util.SupportUtilities;
 import jp.empressia.flownote.writer.IWriter;

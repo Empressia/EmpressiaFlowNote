@@ -1,4 +1,4 @@
-package jp.empressia.flownote.analyzer;
+package jp.empressia.flownote.javaparser;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,8 +36,8 @@ import jp.empressia.flownote.FlowNode;
 import jp.empressia.flownote.FlowNodeType;
 import jp.empressia.flownote.Method;
 import jp.empressia.flownote.SubFlowNode;
-import jp.empressia.flownote.javaparser.FlowCommentHelper;
-import jp.empressia.flownote.parser.JavaParserSourceParser;
+import jp.empressia.flownote.analyzer.Analyzer;
+import jp.empressia.flownote.parser.FlowCommentHelper;
 import jp.empressia.flownote.parser.MethodCache;
 import jp.empressia.flownote.util.NodeUtilities;
 

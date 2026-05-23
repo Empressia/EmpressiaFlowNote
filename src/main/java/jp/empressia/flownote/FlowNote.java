@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import jp.empressia.flownote.analyzer.JavaParserAnalyzer;
-import jp.empressia.flownote.javaparser.FlowCommentHelper;
-import jp.empressia.flownote.parser.JavaParserSourceParser;
+import jp.empressia.flownote.javaparser.JavaParserAnalyzer;
+import jp.empressia.flownote.javaparser.JavaParserSourceParser;
+import jp.empressia.flownote.parser.FlowCommentHelper;
 import jp.empressia.flownote.util.SupportUtilities;
 import jp.empressia.flownote.writer.IWriter;
 import jp.empressia.flownote.writer.MermaidMarkdownWriter;

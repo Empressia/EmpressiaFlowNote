@@ -1,4 +1,4 @@
-package jp.empressia.flownote.parser;
+package jp.empressia.flownote.javaparser;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -22,6 +22,8 @@ import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeS
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
 
 import jp.empressia.flownote.Method;
+import jp.empressia.flownote.parser.MethodCache;
+import jp.empressia.flownote.parser.SourceParser;
 
 /// FlowNoteを構成するためのParser。
 /// @author すふぃあ
