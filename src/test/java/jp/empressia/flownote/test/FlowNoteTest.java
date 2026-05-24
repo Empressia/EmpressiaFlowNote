@@ -20,6 +20,7 @@ import jp.empressia.flownote.FlowNode;
 import jp.empressia.flownote.FlowNote;
 import jp.empressia.flownote.Method;
 import jp.empressia.flownote.SubFlowNode;
+import jp.empressia.flownote.javaparser.JavaParserAnalyzer;
 import jp.empressia.flownote.javaparser.JavaParserSourceParser;
 import jp.empressia.flownote.sample.Sample01;
 import jp.empressia.flownote.util.SupportUtilities;
@@ -31,18 +32,19 @@ import jp.empressia.flownote.writer.MermaidMarkdownWriter;
 public class FlowNoteTest {
 
 	/// キャッシュされたFlowNote。
-	private FlowNote FlowNote;
+	private FlowNote<?> FlowNote;
 
 	/// FlowNoteを構成して、解析した状態でキャッシュし、返します。
-	private synchronized FlowNote getFlowNote() {
-		FlowNote flowNote = this.FlowNote;
+	private synchronized FlowNote<?> getFlowNote() {
+		FlowNote<?> flowNote = this.FlowNote;
 		if(flowNote == null) {
 			String[] sourceRootPathStrings = { "src/main/java/", "src/test/java/" };
 			flowNote = jp.empressia.flownote.FlowNote.create(
 				JavaParserSourceParser.Builder.create(
 					SupportUtilities.generateSourceRootPaths(sourceRootPathStrings),
 					SupportUtilities.generateReferencePaths()
-				).build()
+				).build(),
+				JavaParserAnalyzer::new
 			).parse();
 			this.FlowNote = flowNote;
 		}

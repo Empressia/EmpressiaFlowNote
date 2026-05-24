@@ -79,6 +79,10 @@ public class JavaParserAnalyzer extends Analyzer<JavaParserSourceParser.Result> 
 		this.MethodFlowCharts = new HashMap<Method, FlowChart>();
 		this.CallStack = new Stack<Method>();
 	}
+	/// コンストラクタです。
+	public JavaParserAnalyzer(JavaParserSourceParser.Result ParserResult) {
+		this(ParserResult, new FlowCommentHelper());
+	}
 
 	/// 対象のメソッドに関連するFlowChartの一覧を構成します。
 	@Override

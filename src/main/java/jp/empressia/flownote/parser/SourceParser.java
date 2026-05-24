@@ -6,14 +6,14 @@ import java.util.List;
 
 /// FlowNoteを構成するためのParser。
 /// @author すふぃあ
-public interface SourceParser<PC, PM> {
+public interface SourceParser<R extends SourceParser.Result<?, ?>> {
 
 	/// ソースコードを解析してFlowNoteを作成します。
-	public Result<PC, PM> parse();
+	public R parse();
 
 	/// FlowNoteを構成するためのParserのBuilderです。
 	/// @author すふぃあ
-	public static abstract class Builder<P extends SourceParser<?, ?>, S extends Builder<P, S>> {
+	public static abstract class Builder<P extends SourceParser<?>, S extends Builder<P, S>> {
 		/// ソースコードのルートパス。
 		protected List<Path> SourceRootPaths;
 		/// 参照と解決用のパス。

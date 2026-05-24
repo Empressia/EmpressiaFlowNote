@@ -27,7 +27,7 @@ import jp.empressia.flownote.parser.SourceParser;
 
 /// FlowNoteを構成するためのParser。
 /// @author すふぃあ
-public class JavaParserSourceParser implements SourceParser<ClassOrInterfaceDeclaration, MethodDeclaration> {
+public class JavaParserSourceParser implements SourceParser<JavaParserSourceParser.Result> {
 
 	/// ソースコードのJava言語仕様のバージョン。
 	public static final String DEFAULT_JAVA_LANGUAGE_VERSION = ParserConfiguration.LanguageLevel.values()[ParserConfiguration.LanguageLevel.values().length - 1].name();
