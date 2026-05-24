@@ -96,7 +96,7 @@ dependencies {
 
 tasks.register("createFlowchart", JavaExec) {
 	classpath = sourceSets.tool.runtimeClasspath + sourceSets.main.runtimeClasspath;
-	mainClass = "jp.empressia.flownote.FlowNote";
+	mainClass = "jp.empressia.flownote.Main";
 	args(
 		"-s", "src/main/java/",
 		"-o", "doc/flowchart/Flowchart_{2}_{3}.md"

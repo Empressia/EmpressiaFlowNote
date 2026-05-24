@@ -8,7 +8,7 @@
 			"type": "java",
 			"name": "FlowNote generate Sample01.",
 			"request": "launch",
-			"mainClass": "jp.empressia.flownote.FlowNote",
+			"mainClass": "jp.empressia.flownote.Main",
 			"args": [
 				"-s", "src/main/java/,src/test/java/",
 				"-o", "doc/flowchart/Flowchart_{2}_{3}.md",
