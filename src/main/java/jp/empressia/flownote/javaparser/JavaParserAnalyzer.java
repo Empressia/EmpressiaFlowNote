@@ -361,6 +361,12 @@ public class JavaParserAnalyzer extends Analyzer<JavaParserSourceParser.Result> 
 						System.out.println(message);
 						if(JavaParserAnalyzer.this.ShowResolutionFailureDetails) { ex.printStackTrace(); }
 						rm = null;
+					} else if(ex.getMessage().equals("com.github.javaparser.ast.type.ArrayType")) {
+						// java.lang.UnsupportedOperationException: com.github.javaparser.ast.type.ArrayType
+						String message = this.createMessage("Warning", ex, n);
+						System.out.println(message);
+						if(JavaParserAnalyzer.this.ShowResolutionFailureDetails) { ex.printStackTrace(); }
+						rm = null;
 					} else if(ex.getMessage().equals("Return-Type-Substituable must be implemented on reference type.")) {
 						// TODOが含まれているメソッドでの例外です。
 						String message = this.createMessage("Warning", ex, n);
