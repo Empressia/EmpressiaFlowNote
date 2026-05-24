@@ -1,6 +1,5 @@
 package jp.empressia.flownote;
 
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import jp.empressia.flownote.analyzer.Analyzer;
@@ -15,7 +14,7 @@ public class FlowNote<R extends SourceParser.Result<?, ?>> {
 	private SourceParser<R> Parser;
 
 	/// メソッドの解析用。
-	private Function<R, Analyzer<R>> AnalyzerCreator;
+	private AnalyzerCreator<R> AnalyzerCreator;
 
 	/// メソッドの読み込み結果。
 	private R ParserResult;
@@ -24,13 +23,13 @@ public class FlowNote<R extends SourceParser.Result<?, ?>> {
 	private Analyzer.Result AnalyzerResult;
 
 	/// コンストラクタ。
-	private FlowNote(SourceParser<R> parser, Function<R, Analyzer<R>> analyzerCreator) {
+	private FlowNote(SourceParser<R> parser, AnalyzerCreator<R> analyzerCreator) {
 		this.Parser = parser;
 		this.AnalyzerCreator = analyzerCreator;
 	}
 
 	/// FlowNoteを作成します。
-	public static <R extends SourceParser.Result<?, ?>> FlowNote<R> create(SourceParser<R> parser, Function<R, Analyzer<R>> analyzerCreator) {
+	public static <R extends SourceParser.Result<?, ?>> FlowNote<R> create(SourceParser<R> parser, AnalyzerCreator<R> analyzerCreator) {
 		return new FlowNote<R>(parser, analyzerCreator);
 	}
 
@@ -48,7 +47,7 @@ public class FlowNote<R extends SourceParser.Result<?, ?>> {
 		if(parserResult == null) {
 			throw new IllegalStateException("Analyzerが初期化されていません。parseされていないようです。");
 		}
-		Analyzer<R> analyzer = this.AnalyzerCreator.apply(parserResult);
+		Analyzer<R> analyzer = this.AnalyzerCreator.create(parserResult);
 		Analyzer.Result analyzerResult = analyzer.analyze(methodFilter);
 		this.AnalyzerResult = analyzerResult;
 		return this;
@@ -72,6 +71,14 @@ public class FlowNote<R extends SourceParser.Result<?, ?>> {
 			writer.write(method, analyzerResult.Charts);
 		}
 		return this;
+	}
+
+	/// FlowNote用にAnalyzerを構成するためのCreatorです。
+	/// @author すふぃあ
+	@FunctionalInterface
+	public static interface AnalyzerCreator<R extends SourceParser.Result<?, ?>> {
+		/// Analyzerを作成します。
+		public Analyzer<R> create(R parserResult);
 	}
 
 }
