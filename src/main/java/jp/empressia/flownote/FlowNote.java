@@ -12,12 +12,6 @@ import jp.empressia.flownote.writer.IWriter;
 /// @author すふぃあ
 public class FlowNote {
 
-	/// ソースコードのルートパス。
-	public static final String DEFALUT_SOURCE_ROOT_PATH = "src/main/java/";
-
-	/// FlowNote用のコメントのマーカーキーワード。
-	public static final String DEFAULT_MARKER_KEYWORD = "Flow";
-
 	/// ソースコードの読み込み用。
 	private JavaParserSourceParser Parser;
 
@@ -42,7 +36,7 @@ public class FlowNote {
 
 	/// FlowNoteを作成します。
 	public static FlowNote create(JavaParserSourceParser parser) {
-		return new FlowNote(parser, new FlowCommentHelper(FlowNote.DEFAULT_MARKER_KEYWORD));
+		return new FlowNote(parser, new FlowCommentHelper());
 	}
 	/// FlowNoteを作成します。
 	public static FlowNote create(JavaParserSourceParser parser, FlowCommentHelper commentHelper) {

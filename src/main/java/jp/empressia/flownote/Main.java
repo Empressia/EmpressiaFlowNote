@@ -111,7 +111,7 @@ public class Main {
 		public Integer LanguageVersion;
 		/// FlowNote用のコメントのマーカーキーワードを指定します（初期値は『Flow』）（『-』を含むと思った動きをしない可能性があります）。
 		@Option(names={"-MarkerKeyword", "--marker-keyword", "-c"}, description="FlowNote用のコメントのマーカーキーワードを指定します（初期値は『Flow』）（『-』を含むと思った動きをしない可能性があります）。")
-		public String MarkerKeyword = FlowNote.DEFAULT_MARKER_KEYWORD;
+		public String MarkerKeyword = FlowCommentHelper.DEFAULT_MARKER_KEYWORD;
 		/// 出力するパスのフォーマットを指定します。{0}……完全修飾クラス名、{1}……パッケージ名、{2}……クラス名、{3}……メソッド名。{4}……パラメーターの型一覧。MeesageFormatを使用して解決されます。
 		@Option(names={"-OutputFilePathFormat", "--output-file-path-format", "-o"}, description="出力するパスのフォーマットを指定します。{0}……完全修飾クラス名、{1}……パッケージ名、{2}……クラス名、{3}……メソッド名。{4}……パラメーターの型一覧。MeesageFormatを使用して解決されます。", required=true)
 		public String OutputFilePathFormat;
