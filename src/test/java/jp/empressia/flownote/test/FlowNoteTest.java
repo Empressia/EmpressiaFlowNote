@@ -31,24 +31,27 @@ import jp.empressia.flownote.writer.MermaidMarkdownWriter;
 /// @author すふぃあ
 public class FlowNoteTest {
 
-	/// キャッシュされたFlowNote。
-	private FlowNote<?> FlowNote;
-
-	/// FlowNoteを構成して、解析した状態でキャッシュし、返します。
-	private synchronized FlowNote<?> getFlowNote() {
-		FlowNote<?> flowNote = this.FlowNote;
-		if(flowNote == null) {
+	/// FlowNoteのキャッシュ。
+	private static class Holder {
+		/// キャッシュされたFlowNote。
+		private static final FlowNote<?> FlowNote = Holder.createFlowNote();
+		/// ソースコードを読み込んだ状態で返します。
+		private static FlowNote<?> createFlowNote() {
 			String[] sourceRootPathStrings = { "src/main/java/", "src/test/java/" };
-			flowNote = jp.empressia.flownote.FlowNote.create(
+			FlowNote<?> flowNote = jp.empressia.flownote.FlowNote.create(
 				JavaParserSourceParser.Builder.create(
 					SupportUtilities.generateSourceRootPaths(sourceRootPathStrings),
 					SupportUtilities.generateReferencePaths()
 				).build(),
 				JavaParserAnalyzer::new
 			).parse();
-			this.FlowNote = flowNote;
+			return flowNote;
 		}
-		return flowNote;
+	}
+
+	/// FlowNoteを構成して、解析した状態でキャッシュし、返します。
+	protected FlowNote<?> getFlowNote() {
+		return Holder.FlowNote;
 	}
 
 	/// サンプルのMethodを作成します。
