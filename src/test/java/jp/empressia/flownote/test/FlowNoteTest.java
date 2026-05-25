@@ -58,7 +58,7 @@ public class FlowNoteTest {
 	@Test
 	public void プロジェクトを解析できる() {
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyzeAll(writer);
+		this.getFlowNote().analyzeAll().write(writer);
 		while(writer.poll() != null) {
 		}
 	}
@@ -70,7 +70,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(nullValue()));
@@ -83,7 +83,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(nullValue()));
@@ -96,7 +96,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
@@ -114,7 +114,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(nullValue()));
@@ -127,7 +127,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
@@ -143,7 +143,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
@@ -159,7 +159,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
@@ -175,7 +175,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
@@ -191,7 +191,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
@@ -207,7 +207,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
@@ -224,7 +224,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
@@ -240,7 +240,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
@@ -256,7 +256,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
@@ -272,7 +272,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(nullValue()));
@@ -285,7 +285,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
@@ -310,7 +310,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
@@ -335,7 +335,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
@@ -360,7 +360,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
@@ -385,7 +385,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(nullValue()));
@@ -398,7 +398,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
@@ -421,7 +421,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
@@ -444,7 +444,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
@@ -467,7 +467,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
@@ -483,7 +483,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(nullValue()));
@@ -496,7 +496,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));
@@ -512,7 +512,7 @@ public class FlowNoteTest {
 		String methodName = test.getTestMethod().get().getName();
 		Method method = FlowNoteTest.createMethod(c, methodName);
 		TestWriter writer = new TestWriter();
-		this.getFlowNote().analyze(method, writer);
+		this.getFlowNote().analyze(method).write(writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
 		assertThat(chart, is(notNullValue()));

@@ -51,7 +51,7 @@ public class SupportUtilities {
 	public static void writeMermaidMarkdown(String[] sourceRootPathStrings, Predicate<Method> f, IWriter writer) {
 		List<Path> sourceRootPaths = SupportUtilities.generateSourceRootPaths(sourceRootPathStrings);
 		List<Path> referencePaths = SupportUtilities.generateReferencePaths();
-		FlowNote.create(JavaParserSourceParser.Builder.create(sourceRootPaths, referencePaths).build()).parse().analyze(f, writer);
+		FlowNote.create(JavaParserSourceParser.Builder.create(sourceRootPaths, referencePaths).build()).parse().analyze(f).write(writer);
 	}
 
 }
