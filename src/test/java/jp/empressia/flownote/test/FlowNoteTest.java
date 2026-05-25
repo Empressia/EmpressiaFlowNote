@@ -470,7 +470,10 @@ public class FlowNoteTest {
 		this.getFlowNote().analyze(method, writer);
 		Result result = writer.Results.poll();
 		FlowChart chart = result.getChart();
-		assertThat(chart, is(nullValue()));
+		assertThat(chart, is(notNullValue()));
+		assertThat(chart.Graph.Nodes.size(), is(1));
+		assertThat(chart.Graph.Edges.size(), is(0));
+		assertThat(chart.FinishNodes.size(), is(1));
 	}
 
 	/// メソッド内のreturnだけではノードは構成されない。

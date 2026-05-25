@@ -565,17 +565,25 @@ public class FlowNote {
 				}
 				MethodDeclaration callTarget = (MethodDeclaration)rm.toAst().orElse(null);
 				if(callTarget != null) {
-					if(callTarget.getBody() == null) {
+					if(callTarget.getBody().isPresent() == false) {
 						@SuppressWarnings("unchecked")
 						ClassOrInterfaceDeclaration parent = callTarget.findAncestor(ClassOrInterfaceDeclaration.class).get();
 						while(parent != null) {
-							ClassOrInterfaceDeclaration child = FlowNote.this.ClassMap.get(parent.resolve().asReferenceType().getQualifiedName());
-							List<MethodDeclaration> childMethods = child.getMethodsBySignature(callTarget.getNameAsString(), callTarget.getParameters().stream().map(p -> p.getTypeAsString()).toArray(String[]::new));
-							if(childMethods.size() == 1) {
-								MethodDeclaration childMethod = childMethods.get(0);
-								if(childMethod.getBody() != null) {
-									callTarget = childMethod;
-									break;
+							ClassOrInterfaceDeclaration child;
+							try {
+								child = FlowNote.this.ClassMap.get(parent.resolve().asReferenceType().getQualifiedName());
+							} catch(IllegalStateException ex) {
+								// JavaParserの問題だと思っています。
+								break;
+							}
+							if(child != null) {
+								List<MethodDeclaration> childMethods = child.getMethodsBySignature(callTarget.getNameAsString(), callTarget.getParameters().stream().map(p -> p.getTypeAsString()).toArray(String[]::new));
+								if(childMethods.size() == 1) {
+									MethodDeclaration childMethod = childMethods.get(0);
+									if(childMethod.getBody().isPresent()) {
+										callTarget = childMethod;
+										break;
+									}
 								}
 							}
 							parent = child;
