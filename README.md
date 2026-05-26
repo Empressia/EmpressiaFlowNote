@@ -49,16 +49,16 @@ Sample.sample02のフローチャート。
 
 ```mermaid
 graph TD
-	N-Start-N([開始])
-	N-Sample.sample02$$-1{条件を確認する。}
-	N-Sample.sample02$$-2[適当な処理をする。]
-	N-Sample.sample01$$-1[唯一の処理をする。]
-	N-Finish-N([終了])
-	N-Start-N --> N-Sample.sample02$$-1
+	N-Start(["開始"])
+	N-Sample.sample02$$-1{"条件を確認する。"}
+	N-Sample.sample02$$-2["適当な処理をする。"]
+	N-Sample.sample01$$-1["唯一の処理をする。"]
+	N-Finish(["終了"])
+	N-Start --> N-Sample.sample02$$-1
 	N-Sample.sample02$$-1 --> N-Sample.sample02$$-2
 	N-Sample.sample02$$-1 --> N-Sample.sample01$$-1
-	N-Sample.sample02$$-2 --> N-Finish-N
-	N-Sample.sample01$$-1 --> N-Finish-N
+	N-Sample.sample02$$-2 --> N-Finish
+	N-Sample.sample01$$-1 --> N-Finish
 ```
 
 ## 使い方
