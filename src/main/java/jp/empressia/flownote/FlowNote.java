@@ -9,67 +9,89 @@ import jp.empressia.flownote.writer.*;
 /// @author すふぃあ
 public class FlowNote<R extends SourceParser.Result<?, ?>> {
 
-	/// ソースコードの読み込み用。
-	private SourceParser<R> Parser;
-
-	/// メソッドの解析用。
-	private AnalyzerCreator<R> AnalyzerCreator;
-
-	/// メソッドの読み込み結果。
-	private R ParserResult;
-
-	/// メソッドの解析結果。
-	private Analyzer.Result AnalyzerResult;
-
 	/// コンストラクタ。
-	private FlowNote(SourceParser<R> parser, AnalyzerCreator<R> analyzerCreator) {
-		this.Parser = parser;
-		this.AnalyzerCreator = analyzerCreator;
+	private FlowNote() {
 	}
 
 	/// FlowNoteを作成します。
-	public static <R extends SourceParser.Result<?, ?>> FlowNote<R> create(SourceParser<R> parser, AnalyzerCreator<R> analyzerCreator) {
-		return new FlowNote<R>(parser, analyzerCreator);
+	public static <R extends SourceParser.Result<?, ?>> FlowNote.Initialized<R> create(SourceParser<R> parser, AnalyzerCreator<R> analyzerCreator) {
+		return new FlowNote.Initialized<R>(parser, analyzerCreator);
 	}
 
-	/// ソースコードを読み込みます。
-	public FlowNote<R> parse() {
-		// 内容は、外部ライブラリの情報が含まれるから、インターフェースに出せない。
-		R parserResult = this.Parser.parse();
-		this.ParserResult = parserResult;
-		return this;
+	/// FlowNoteの初期化した状態を表現します。
+	/// @author すふぃあ
+	public static class Initialized<R extends SourceParser.Result<?, ?>> {
+
+		/// ソースコードの読み込み用。
+		private SourceParser<R> Parser;
+
+		/// メソッドの解析用。
+		private AnalyzerCreator<R> AnalyzerCreator;
+
+		/// コンストラクタです。
+		private Initialized(SourceParser<R> parser, AnalyzerCreator<R> analyzerCreator) {
+			this.Parser = parser;
+			this.AnalyzerCreator = analyzerCreator;
+		}
+
+		/// ソースコードを読み込みます。
+		public FlowNote.Parsed<R> parse() {
+			// 内容は、外部ライブラリの情報が含まれるから、インターフェースに出せない。
+			R parserResult = this.Parser.parse();
+			Analyzer<R> analyzer = this.AnalyzerCreator.create(parserResult);
+			return new FlowNote.Parsed<R>(analyzer);
+		}
+
 	}
 
-	/// メソッドのフローを解析します。
-	public FlowNote<R> analyze(Predicate<Method> methodFilter) {
-		R parserResult = this.ParserResult;
-		if(parserResult == null) {
-			throw new IllegalStateException("Analyzerが初期化されていません。parseされていないようです。");
+	/// FlowNoteの読み込んだ状態を表現します。
+	/// @author すふぃあ
+	public static class Parsed<R extends SourceParser.Result<?, ?>> {
+
+		/// メソッドの解析用。
+		private Analyzer<R> Analyzer;
+
+		/// コンストラクタです。
+		private Parsed(Analyzer<R> analyzer) {
+			this.Analyzer = analyzer;
 		}
-		Analyzer<R> analyzer = this.AnalyzerCreator.create(parserResult);
-		Analyzer.Result analyzerResult = analyzer.analyze(methodFilter);
-		this.AnalyzerResult = analyzerResult;
-		return this;
-	}
-	/// メソッドのフローを解析します。
-	public FlowNote<R> analyzeAll() {
-		return this.analyze(m -> true);
-	}
-	/// メソッドのフローを解析します。
-	public FlowNote<R> analyze(Method method) {
-		return this.analyze(m -> m.equals(method));
+
+		/// メソッドのフローを解析します。
+		public FlowNote.Analyzed analyze(Predicate<Method> methodFilter) {
+			Analyzer.Result analyzerResult = this.Analyzer.analyze(methodFilter);
+			return new FlowNote.Analyzed(analyzerResult);
+		}
+		/// メソッドのフローを解析します。
+		public FlowNote.Analyzed analyzeAll() {
+			return this.analyze(m -> true);
+		}
+		/// メソッドのフローを解析します。
+		public FlowNote.Analyzed analyze(Method method) {
+			return this.analyze(m -> m.equals(method));
+		}
+
 	}
 
-	/// 解析結果を出力します。
-	public FlowNote<R> write(IWriter writer) {
-		Analyzer.Result analyzerResult = this.AnalyzerResult;
-		if(analyzerResult == null) {
-			throw new IllegalStateException("FlowChartが生成されていません。analyzeされていないようです。");
+	/// FlowNoteの解析した状態を表現します。
+	/// @author すふぃあ
+	public static class Analyzed {
+
+		/// メソッドの解析結果。
+		private Analyzer.Result AnalyzerResult;
+
+		/// コンストラクタです。
+		private Analyzed(Analyzer.Result analyzerResult) {
+			this.AnalyzerResult = analyzerResult;
 		}
-		for(Method method : analyzerResult.Methods) {
-			writer.write(method, analyzerResult.Charts);
+
+		/// 解析結果を出力します。
+		public void write(IWriter writer) {
+			Analyzer.Result analyzerResult = this.AnalyzerResult;
+			for(Method method : analyzerResult.Methods) {
+				writer.write(method, analyzerResult.Charts);
+			}
 		}
-		return this;
+
 	}
 
 	/// FlowNote用にAnalyzerを構成するためのCreatorです。

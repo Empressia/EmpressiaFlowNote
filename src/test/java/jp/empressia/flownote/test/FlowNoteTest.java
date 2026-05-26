@@ -21,11 +21,11 @@ public class FlowNoteTest {
 	/// FlowNoteのキャッシュ。
 	private static class Holder {
 		/// キャッシュされたFlowNote。
-	    private static final FlowNote<?> FlowNote = Holder.createFlowNote();
+	    private static final FlowNote.Parsed<?> FlowNote = Holder.createFlowNote();
 		/// ソースコードを読み込んだ状態で返します。
-		private static FlowNote<?> createFlowNote() {
+		private static FlowNote.Parsed<?> createFlowNote() {
 			String[] sourceRootPathStrings = { "src/main/java/", "src/test/java/" };
-			FlowNote<?> flowNote = jp.empressia.flownote.FlowNote.create(
+			FlowNote.Parsed<?> flowNote = jp.empressia.flownote.FlowNote.create(
 				SpoonSourceParser.Builder.create(
 					SupportUtilities.generateSourceRootPaths(sourceRootPathStrings),
 					SupportUtilities.generateReferencePaths()
@@ -37,7 +37,7 @@ public class FlowNoteTest {
 	}
 
 	/// FlowNoteを構成して、解析した状態でキャッシュし、返します。
-	protected FlowNote<?> getFlowNote() {
+	protected FlowNote.Parsed<?> getFlowNote() {
         return Holder.FlowNote;
     }
 
