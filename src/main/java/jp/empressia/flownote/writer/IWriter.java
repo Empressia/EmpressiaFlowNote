@@ -1,9 +1,7 @@
 package jp.empressia.flownote.writer;
 
-import java.util.Map;
-
-import jp.empressia.flownote.FlowChart;
-import jp.empressia.flownote.Method;
+import java.util.*;
+import jp.empressia.flownote.*;
 
 /// 出力用のインターフェースです。
 /// @author すふぃあ

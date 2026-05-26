@@ -1,11 +1,9 @@
 package jp.empressia.flownote.test;
 
-import org.junit.jupiter.api.Test;
-
-import jp.empressia.flownote.FlowNote;
-import jp.empressia.flownote.javaparser.JavaParserAnalyzer;
-import jp.empressia.flownote.javaparser.JavaParserSourceParser;
-import jp.empressia.flownote.util.SupportUtilities;
+import jp.empressia.flownote.*;
+import jp.empressia.flownote.javaparser.*;
+import jp.empressia.flownote.util.*;
+import org.junit.jupiter.api.*;
 
 /// FlowNoteのテストクラス。
 /// @author すふぃあ

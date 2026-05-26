@@ -1,9 +1,7 @@
 package jp.empressia.flownote;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.stream.*;
 
 /// チャートです。
 /// 特に、Flowchartとしての表現を意識しています。

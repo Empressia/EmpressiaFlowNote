@@ -1,14 +1,7 @@
 package jp.empressia.flownote.util;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
-
-import jp.empressia.flownote.FlowChart;
-import jp.empressia.flownote.FlowNode;
-import jp.empressia.flownote.Method;
-import jp.empressia.flownote.SubFlowNode;
+import java.util.*;
+import jp.empressia.flownote.*;
 
 /// 複雑なノード操作用のユーティリティです。
 /// @author すふぃあ

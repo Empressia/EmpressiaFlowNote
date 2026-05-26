@@ -1,9 +1,7 @@
 package jp.empressia.flownote.parser;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import jp.empressia.flownote.FlowComment;
+import java.util.regex.*;
+import jp.empressia.flownote.*;
 
 /// FlowNote用のコメントを検出するためのHelperです。
 /// @author すふぃあ

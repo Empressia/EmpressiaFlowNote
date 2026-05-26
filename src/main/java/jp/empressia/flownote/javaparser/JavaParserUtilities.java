@@ -1,8 +1,7 @@
 package jp.empressia.flownote.javaparser;
 
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.*;
+import com.github.javaparser.ast.body.*;
 
 /// JavaParserに依存しているユーティリティです。
 /// @author すふぃあ

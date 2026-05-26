@@ -1,10 +1,9 @@
 package jp.empressia.flownote;
 
-import java.util.function.Predicate;
-
-import jp.empressia.flownote.analyzer.Analyzer;
-import jp.empressia.flownote.parser.SourceParser;
-import jp.empressia.flownote.writer.IWriter;
+import java.util.function.*;
+import jp.empressia.flownote.analyzer.*;
+import jp.empressia.flownote.parser.*;
+import jp.empressia.flownote.writer.*;
 
 /// FlowNoteの全体を俯瞰して使用するために使用します。
 /// @author すふぃあ

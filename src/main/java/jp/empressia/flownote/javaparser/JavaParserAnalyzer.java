@@ -1,45 +1,20 @@
 package jp.empressia.flownote.javaparser;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-import java.util.TreeMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.comments.Comment;
-import com.github.javaparser.ast.expr.MethodCallExpr;
-import com.github.javaparser.ast.stmt.BlockStmt;
-import com.github.javaparser.ast.stmt.CatchClause;
-import com.github.javaparser.ast.stmt.IfStmt;
-import com.github.javaparser.ast.stmt.ReturnStmt;
-import com.github.javaparser.ast.stmt.Statement;
-import com.github.javaparser.ast.stmt.SwitchStmt;
-import com.github.javaparser.ast.stmt.TryStmt;
-import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import com.github.javaparser.resolution.UnsolvedSymbolException;
-import com.github.javaparser.resolution.declarations.ResolvedMethodDeclaration;
-
-import jp.empressia.flownote.FlowChart;
-import jp.empressia.flownote.FlowComment;
-import jp.empressia.flownote.FlowEdge;
-import jp.empressia.flownote.FlowGraph;
-import jp.empressia.flownote.FlowNode;
-import jp.empressia.flownote.FlowNodeType;
-import jp.empressia.flownote.Method;
-import jp.empressia.flownote.SubFlowNode;
-import jp.empressia.flownote.analyzer.Analyzer;
-import jp.empressia.flownote.parser.FlowCommentHelper;
-import jp.empressia.flownote.parser.MethodCache;
-import jp.empressia.flownote.util.NodeUtilities;
+import com.github.javaparser.ast.body.*;
+import com.github.javaparser.ast.comments.*;
+import com.github.javaparser.ast.expr.*;
+import com.github.javaparser.ast.stmt.*;
+import com.github.javaparser.ast.visitor.*;
+import com.github.javaparser.resolution.*;
+import com.github.javaparser.resolution.declarations.*;
+import java.util.*;
+import java.util.function.*;
+import java.util.stream.*;
+import jp.empressia.flownote.*;
+import jp.empressia.flownote.analyzer.*;
+import jp.empressia.flownote.parser.*;
+import jp.empressia.flownote.util.*;
 
 /// FlowChartを構成するためのAnalyzer。
 /// @author すふぃあ

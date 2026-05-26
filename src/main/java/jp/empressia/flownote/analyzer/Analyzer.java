@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Predicate;
-
 import jp.empressia.flownote.FlowChart;
 import jp.empressia.flownote.FlowComment;
 import jp.empressia.flownote.FlowEdge;

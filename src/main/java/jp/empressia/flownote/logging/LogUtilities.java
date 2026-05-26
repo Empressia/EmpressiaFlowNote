@@ -1,12 +1,9 @@
 package jp.empressia.flownote.logging;
 
-import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
-
-import com.github.javaparser.ast.Node;
-
-import jp.empressia.flownote.javaparser.JavaParserUtilities;
+import com.github.javaparser.ast.*;
+import java.util.*;
+import java.util.function.*;
+import jp.empressia.flownote.javaparser.*;
 
 /// ログ用のユーティリティです。
 /// @author すふぃあ

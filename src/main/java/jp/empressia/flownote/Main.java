@@ -1,17 +1,14 @@
 package jp.empressia.flownote;
 
-import java.nio.file.Path;
-import java.util.List;
-import java.util.function.Predicate;
-
-import jp.empressia.flownote.parser.FlowCommentHelper;
-import jp.empressia.flownote.spoon.SpoonAnalyzer;
-import jp.empressia.flownote.spoon.SpoonSourceParser;
-import jp.empressia.flownote.util.SupportUtilities;
-import jp.empressia.flownote.writer.MermaidMarkdownWriter;
-import picocli.CommandLine;
-import picocli.CommandLine.Option;
-import picocli.CommandLine.ParameterException;
+import java.nio.file.*;
+import java.util.*;
+import java.util.function.*;
+import jp.empressia.flownote.parser.*;
+import jp.empressia.flownote.spoon.*;
+import jp.empressia.flownote.util.*;
+import jp.empressia.flownote.writer.*;
+import picocli.*;
+import picocli.CommandLine.*;
 
 /// FlowNoteをコマンドラインなどから使用するためのエントリポイントです。
 /// @author すふぃあ

@@ -1,6 +1,6 @@
 package jp.empressia.flownote;
 
-import java.util.Objects;
+import java.util.*;
 
 /// エッジです。
 /// @author すふぃあ

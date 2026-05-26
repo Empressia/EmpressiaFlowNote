@@ -1,20 +1,10 @@
 package jp.empressia.flownote.writer;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.regex.Pattern;
-
-import jp.empressia.flownote.FlowChart;
-import jp.empressia.flownote.FlowEdge;
-import jp.empressia.flownote.FlowNode;
-import jp.empressia.flownote.FlowNodeType;
-import jp.empressia.flownote.Method;
-import jp.empressia.flownote.SubFlowNode;
-import jp.empressia.flownote.util.NodeUtilities;
+import java.io.*;
+import java.util.*;
+import java.util.regex.*;
+import jp.empressia.flownote.*;
+import jp.empressia.flownote.util.*;
 
 /// MarkdownとしてMermaid形式で出力するためのWriter。
 /// @author すふぃあ

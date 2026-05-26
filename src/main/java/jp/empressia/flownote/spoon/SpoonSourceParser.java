@@ -1,19 +1,14 @@
 package jp.empressia.flownote.spoon;
 
-import java.nio.file.Path;
-import java.util.LinkedList;
-import java.util.List;
-
-import jp.empressia.flownote.Method;
-import jp.empressia.flownote.parser.MethodCache;
-import jp.empressia.flownote.parser.SourceParser;
-import spoon.Launcher;
-import spoon.reflect.CtModel;
-import spoon.reflect.declaration.CtMethod;
-import spoon.reflect.declaration.CtPackage;
-import spoon.reflect.declaration.CtType;
-import spoon.reflect.visitor.filter.TypeFilter;
-import spoon.support.StandardEnvironment;
+import java.nio.file.*;
+import java.util.*;
+import jp.empressia.flownote.*;
+import jp.empressia.flownote.parser.*;
+import spoon.*;
+import spoon.reflect.*;
+import spoon.reflect.declaration.*;
+import spoon.reflect.visitor.filter.*;
+import spoon.support.*;
 
 /// FlowNoteを構成するためのParser。
 /// @author すふぃあ

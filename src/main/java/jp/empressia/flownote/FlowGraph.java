@@ -1,7 +1,6 @@
 package jp.empressia.flownote;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /// グラフです。
 /// ただのコンテナであり、ノードの存在など、グラフの整合性は担保されません。

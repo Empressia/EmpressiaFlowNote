@@ -1,43 +1,17 @@
 package jp.empressia.flownote.spoon;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-import java.util.TreeMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import jp.empressia.flownote.FlowChart;
-import jp.empressia.flownote.FlowComment;
-import jp.empressia.flownote.FlowEdge;
-import jp.empressia.flownote.FlowGraph;
-import jp.empressia.flownote.FlowNode;
-import jp.empressia.flownote.FlowNodeType;
-import jp.empressia.flownote.Method;
-import jp.empressia.flownote.SubFlowNode;
-import jp.empressia.flownote.analyzer.Analyzer;
-import jp.empressia.flownote.parser.FlowCommentHelper;
-import jp.empressia.flownote.parser.MethodCache;
-import jp.empressia.flownote.util.NodeUtilities;
-import spoon.reflect.code.CtBlock;
-import spoon.reflect.code.CtCatch;
-import spoon.reflect.code.CtComment;
-import spoon.reflect.code.CtIf;
-import spoon.reflect.code.CtInvocation;
-import spoon.reflect.code.CtReturn;
-import spoon.reflect.code.CtStatement;
-import spoon.reflect.code.CtSwitch;
-import spoon.reflect.declaration.CtElement;
-import spoon.reflect.declaration.CtMethod;
-import spoon.reflect.declaration.CtType;
-import spoon.reflect.reference.CtTypeReference;
-import spoon.reflect.visitor.CtScanner;
-import spoon.reflect.visitor.filter.TypeFilter;
+import java.util.*;
+import java.util.function.*;
+import java.util.stream.*;
+import jp.empressia.flownote.*;
+import jp.empressia.flownote.analyzer.*;
+import jp.empressia.flownote.parser.*;
+import jp.empressia.flownote.util.*;
+import spoon.reflect.code.*;
+import spoon.reflect.declaration.*;
+import spoon.reflect.reference.*;
+import spoon.reflect.visitor.*;
+import spoon.reflect.visitor.filter.*;
 
 /// FlowChartを構成するためのAnalyzer。
 /// @author すふぃあ

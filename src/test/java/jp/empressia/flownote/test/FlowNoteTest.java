@@ -5,27 +5,14 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import java.nio.charset.StandardCharsets;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
-
-import jp.empressia.flownote.FlowChart;
-import jp.empressia.flownote.FlowNode;
-import jp.empressia.flownote.FlowNote;
-import jp.empressia.flownote.Method;
-import jp.empressia.flownote.SubFlowNode;
-import jp.empressia.flownote.sample.Sample01;
-import jp.empressia.flownote.spoon.SpoonAnalyzer;
-import jp.empressia.flownote.spoon.SpoonSourceParser;
-import jp.empressia.flownote.util.SupportUtilities;
-import jp.empressia.flownote.writer.IWriter;
-import jp.empressia.flownote.writer.MermaidMarkdownWriter;
+import java.nio.charset.*;
+import java.util.*;
+import jp.empressia.flownote.*;
+import jp.empressia.flownote.sample.*;
+import jp.empressia.flownote.spoon.*;
+import jp.empressia.flownote.util.*;
+import jp.empressia.flownote.writer.*;
+import org.junit.jupiter.api.*;
 
 /// FlowNoteのテストクラス。
 /// @author すふぃあ

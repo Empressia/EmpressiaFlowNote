@@ -1,8 +1,7 @@
 package jp.empressia.flownote.parser;
 
-import java.nio.file.Path;
-import java.util.LinkedList;
-import java.util.List;
+import java.nio.file.*;
+import java.util.*;
 
 /// FlowNoteを構成するためのParser。
 /// @author すふぃあ

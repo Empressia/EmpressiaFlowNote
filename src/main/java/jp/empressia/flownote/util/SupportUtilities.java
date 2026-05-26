@@ -1,19 +1,14 @@
 package jp.empressia.flownote.util;
 
-import java.io.PrintStream;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.regex.Pattern;
-
-import jp.empressia.flownote.FlowNote;
-import jp.empressia.flownote.Method;
-import jp.empressia.flownote.javaparser.JavaParserAnalyzer;
-import jp.empressia.flownote.javaparser.JavaParserSourceParser;
-import jp.empressia.flownote.writer.IWriter;
+import java.io.*;
+import java.nio.charset.*;
+import java.nio.file.*;
+import java.util.*;
+import java.util.function.*;
+import java.util.regex.*;
+import jp.empressia.flownote.*;
+import jp.empressia.flownote.javaparser.*;
+import jp.empressia.flownote.writer.*;
 
 /// サポート用のユーティリティです。
 /// @author すふぃあ

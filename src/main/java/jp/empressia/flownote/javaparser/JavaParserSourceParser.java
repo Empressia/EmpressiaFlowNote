@@ -1,29 +1,17 @@
 package jp.empressia.flownote.javaparser;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Stream;
-
-import com.github.javaparser.JavaParser;
-import com.github.javaparser.JavaParserAdapter;
-import com.github.javaparser.ParserConfiguration;
-import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.resolution.TypeSolver;
-import com.github.javaparser.symbolsolver.JavaSymbolSolver;
-import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
-import com.github.javaparser.symbolsolver.resolution.typesolvers.JarTypeSolver;
-import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
-import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
-
-import jp.empressia.flownote.Method;
-import jp.empressia.flownote.parser.MethodCache;
-import jp.empressia.flownote.parser.SourceParser;
+import com.github.javaparser.*;
+import com.github.javaparser.ast.*;
+import com.github.javaparser.ast.body.*;
+import com.github.javaparser.resolution.*;
+import com.github.javaparser.symbolsolver.*;
+import com.github.javaparser.symbolsolver.resolution.typesolvers.*;
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+import java.util.stream.*;
+import jp.empressia.flownote.*;
+import jp.empressia.flownote.parser.*;
 
 /// FlowNoteを構成するためのParser。
 /// @author すふぃあ

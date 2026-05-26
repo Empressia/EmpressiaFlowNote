@@ -1,9 +1,8 @@
 package jp.empressia.flownote.parser;
 
-import java.util.HashMap;
-import java.util.function.Function;
-
-import jp.empressia.flownote.Method;
+import java.util.*;
+import java.util.function.*;
+import jp.empressia.flownote.*;
 
 /// Method表現の変換と維持を担当します。
 /// @author すふぃあ
