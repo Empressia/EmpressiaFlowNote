@@ -17,6 +17,8 @@ import spoon.reflect.visitor.filter.*;
 /// @author すふぃあ
 public class SpoonAnalyzer extends Analyzer<SpoonSourceParser.Result> {
 
+	static { SpoonUtilities.suppressLoggerWarning(); }
+
 	/// ソースコードのクラス一覧。
 	private List<CtType<?>> Classes;
 	/// ソースコードの親に対する子のマップ。

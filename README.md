@@ -177,3 +177,6 @@ zlibライセンス、MITライセンスでも利用できます。
 	JavaParser用のSourceParserとAnalyzerを使用してください。  
 	また、ランタイムとして、JavaParserが必要になります。  
 	JavaParserでの動作は不安定だから、Spoonの使用を推奨します。  
+
+*	Spoon用のSourceParserとAnalyzerを使用するときに標準エラーの差し替えをしているから、
+	マルチスレッドで使用する場合は注意してください。

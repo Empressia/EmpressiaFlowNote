@@ -14,6 +14,8 @@ import spoon.support.*;
 /// @author すふぃあ
 public class SpoonSourceParser implements SourceParser<SpoonSourceParser.Result> {
 
+	static { SpoonUtilities.suppressLoggerWarning(); }
+
 	/// ソースコードのJava言語仕様のバージョン。
 	public static final int DEFAULT_JAVA_LANGUAGE_VERSION = StandardEnvironment.DEFAULT_CODE_COMPLIANCE_LEVEL;
 
