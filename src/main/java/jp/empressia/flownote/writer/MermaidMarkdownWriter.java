@@ -246,7 +246,6 @@ public class MermaidMarkdownWriter extends FileWriter {
 	/// ノードのIDをMermaid用に変換します。
 	private static String convertNodeID(String ID) {
 		String converted = ID;
-		converted = converted.replace("#", ".");
 		converted = MermaidMarkdownWriter.NodeIDRegex.matcher(converted).replaceAll("\\$");
 		converted = converted.replace(" ", "");
 		return converted;

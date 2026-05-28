@@ -105,9 +105,16 @@ public class JavaParserSourceParser implements SourceParser<JavaParserSourcePars
 		if(c == null) { return null; }
 		CompilationUnit ut = c.findCompilationUnit().orElse(null);
 		if(ut == null) { return null; }
+		String name = c.getFullyQualifiedName().get();
+		String packageName = ut.getPackageDeclaration().map(p -> p.getNameAsString()).orElse("");
+		if(packageName.isEmpty() == false) {
+			name = packageName + "." + name.substring(packageName.length() + ".".length()).replace(".", "$");
+		} else {
+			name = name.replace(".", "$");
+		}
 		Method method = new Method(
-			c.getFullyQualifiedName().get(),
-			ut.getPackageDeclaration().map(p -> p.getNameAsString()).orElse(""),
+			name,
+			packageName,
 			m.getNameAsString(),
 			m.getParameters().stream().map(p -> p.getTypeAsString()).toList()
 		);
