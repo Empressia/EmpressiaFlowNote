@@ -115,7 +115,12 @@ public class JavaParserAnalyzer extends Analyzer<JavaParserSourceParser.Result> 
 			BlockStmt body = m.getBody().orElse(null);
 			if(body != null) {
 				TreeMap<Integer, FlowNode> flowCommentNodes = new TreeMap<Integer, FlowNode>();
-				List<Comment> comments = body.getAllContainedComments();
+				Iterable<Comment> comments = body.getAllContainedComments()
+					.stream().sorted(
+						Comparator
+							.comparingInt((Comment c) -> c.getBegin().get().line)
+							.thenComparingInt(c -> c.getBegin().get().column)
+					)::iterator;
 				int nodeNumber = 0;
 				for(Comment comment : comments) {
 					FlowComment fc = this.CommentHelper.convert(comment.asString());

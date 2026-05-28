@@ -104,7 +104,12 @@ public class SpoonAnalyzer extends Analyzer<SpoonSourceParser.Result> {
 			CtBlock<?> body = (m.isImplicit() == false) ? m.getBody() : null;
 			if(body != null) {
 				TreeMap<Integer, FlowNode> flowCommentNodes = new TreeMap<Integer, FlowNode>();
-				List<CtComment> comments = body.getElements(new TypeFilter<>(CtComment.class));
+				Iterable<CtComment> comments = body.getElements(new TypeFilter<>(CtComment.class))
+					.stream().sorted(
+						Comparator
+							.comparingInt((CtComment c) -> c.getPosition().getSourceStart())
+							.thenComparingInt(c -> c.getPosition().getSourceEnd())
+					)::iterator;
 				int nodeNumber = 0;
 				for(CtComment comment : comments) {
 					FlowComment fc = this.CommentHelper.convert(comment.getRawContent());
