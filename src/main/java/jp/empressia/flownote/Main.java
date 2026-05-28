@@ -4,9 +4,9 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Predicate;
 
-import jp.empressia.flownote.javaparser.JavaParserAnalyzer;
-import jp.empressia.flownote.javaparser.JavaParserSourceParser;
 import jp.empressia.flownote.parser.FlowCommentHelper;
+import jp.empressia.flownote.spoon.SpoonAnalyzer;
+import jp.empressia.flownote.spoon.SpoonSourceParser;
 import jp.empressia.flownote.util.SupportUtilities;
 import jp.empressia.flownote.writer.MermaidMarkdownWriter;
 import picocli.CommandLine;
@@ -76,7 +76,6 @@ public class Main {
 		boolean renderDecisionAsProcess = configuration.RenderDecisionAsProcess;
 		boolean renderSubFlowNodeAsGroup = configuration.RenderSubflowAsGroup;
 		String basePackageName = configuration.BasePackageName;
-		boolean showResolutionFailureDetails = configuration.ShowResolutionFailureDetails;
 		MermaidMarkdownWriter writer = new MermaidMarkdownWriter(pathFormat)
 			.newline(newline)
 			.startNodeName(startNodeName)
@@ -86,11 +85,10 @@ public class Main {
 			.basePackageName(basePackageName);
 		FlowNote
 			.create(
-				JavaParserSourceParser.Builder.create(sourceRootPaths, referencePaths)
+				SpoonSourceParser.Builder.create(sourceRootPaths, referencePaths)
 					.languageVersion(languageVersion)
 					.build(),
-				(parserResult) -> new JavaParserAnalyzer(parserResult, commentHelper)
-					.showResolutionFailureDetails(showResolutionFailureDetails)
+				(parserResult) -> new SpoonAnalyzer(parserResult, commentHelper)
 			)
 			.parse()
 			.analyze(methodFilter)
@@ -136,9 +134,6 @@ public class Main {
 		/// 基準となるパッケージの名前を指定します。
 		@Option(names={"-BasePackageName", "--base-package-name"}, description="基準となるパッケージの名前を指定します。")
 		public String BasePackageName;
-		/// メソッド呼び出し解決に失敗したときの詳細を表示します。
-		@Option(names={"-ShowResolutionFailureDetails", "--show-resolution-failure-details"}, description="メソッド呼び出し解決に失敗したときの詳細を表示します。")
-		public boolean ShowResolutionFailureDetails;
 	}
 
 }

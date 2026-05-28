@@ -20,9 +20,9 @@ import jp.empressia.flownote.FlowNode;
 import jp.empressia.flownote.FlowNote;
 import jp.empressia.flownote.Method;
 import jp.empressia.flownote.SubFlowNode;
-import jp.empressia.flownote.javaparser.JavaParserAnalyzer;
-import jp.empressia.flownote.javaparser.JavaParserSourceParser;
 import jp.empressia.flownote.sample.Sample01;
+import jp.empressia.flownote.spoon.SpoonAnalyzer;
+import jp.empressia.flownote.spoon.SpoonSourceParser;
 import jp.empressia.flownote.util.SupportUtilities;
 import jp.empressia.flownote.writer.IWriter;
 import jp.empressia.flownote.writer.MermaidMarkdownWriter;
@@ -34,16 +34,16 @@ public class FlowNoteTest {
 	/// FlowNoteのキャッシュ。
 	private static class Holder {
 		/// キャッシュされたFlowNote。
-		private static final FlowNote<?> FlowNote = Holder.createFlowNote();
+	    private static final FlowNote<?> FlowNote = Holder.createFlowNote();
 		/// ソースコードを読み込んだ状態で返します。
 		private static FlowNote<?> createFlowNote() {
 			String[] sourceRootPathStrings = { "src/main/java/", "src/test/java/" };
 			FlowNote<?> flowNote = jp.empressia.flownote.FlowNote.create(
-				JavaParserSourceParser.Builder.create(
+				SpoonSourceParser.Builder.create(
 					SupportUtilities.generateSourceRootPaths(sourceRootPathStrings),
 					SupportUtilities.generateReferencePaths()
 				).build(),
-				JavaParserAnalyzer::new
+				SpoonAnalyzer::new
 			).parse();
 			return flowNote;
 		}
@@ -51,8 +51,8 @@ public class FlowNoteTest {
 
 	/// FlowNoteを構成して、解析した状態でキャッシュし、返します。
 	protected FlowNote<?> getFlowNote() {
-		return Holder.FlowNote;
-	}
+        return Holder.FlowNote;
+    }
 
 	/// サンプルのMethodを作成します。
 	private static Method createMethod(Class<?> c, String methodName) {

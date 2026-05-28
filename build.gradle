@@ -28,7 +28,9 @@ sourceSets {
 dependencies {
 	// JavaParser.
 	// 3.28.0 : https://github.com/javaparser/javaparser/issues/4997
-	implementation("com.github.javaparser:javaparser-symbol-solver-core:3.27.1");
+	compileOnly("com.github.javaparser:javaparser-symbol-solver-core:3.27.1");
+	// Spoon.
+	implementation("fr.inria.gforge.spoon:spoon-core:11.3.1-beta-8");
 
 	// picocli.
 	implementation("info.picocli:picocli:4.7.7");
@@ -38,6 +40,7 @@ dependencies {
 	testImplementation("org.hamcrest:hamcrest:" + hamcrestVersion);
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:" + junitVersion);
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher:" + junitVersion);
+	testRuntimeOnly("com.github.javaparser:javaparser-symbol-solver-core:3.27.1");
 
 	// FlowNote.
 	toolRuntimeOnly("jp.empressia:jp.empressia.flownote:" + ((version != "unspecified") ? version : "1.0.0"));

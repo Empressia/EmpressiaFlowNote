@@ -5,11 +5,9 @@
 	* [試してみる](#試してみる)
 	* [Gradleから実行する](#Gradleから実行する)
 	* [Javaのプログラム内で実行する](#Javaのプログラム内で実行する)
-	
 * [ライブラリの依存関係](#ライブラリの依存関係)
 * [ライセンス](#ライセンス)
 * [制限事項](#制限事項)
-* [解析できない？](#解析できない？)
 
 ## 概要
 
@@ -112,17 +110,19 @@ tasks.register("createFlowchart", JavaExec) {
 
 ### Javaのプログラム内で実行する
 
-FlowNote.Parser.Builderを作成して、任意の設定を追加します。  
-build、parseを経て、analayzeメソッドを呼び出すことで出力します。  
+SourceParser.Builderを作成して、任意の設定を追加します。  
+FlowNoteを、SourceParserとAnalyzerの作成関数を指定して作成します。  
+parse、analyzeを経て、writeメソッドを呼び出すことで出力します。  
 MermaidMarkdownWriterを使用することで、Mardkdown用にMermaid形式で出力します。  
 
 ```java
 FlowNote.create(
-	Parser.Builder.create(
-		SupportUtilities.generateSourceRootPaths(FlowNote.DEFALUT_SOURCE_ROOT_PATH),
+	SpoonSourceParser.Builder.create(
+		SupportUtilities.generateSourceRootPaths(new String[] {"src/main/java/"}),
 		SupportUtilities.generateReferencePaths()
-	).build()
-).parse().analyzeAll(new MermaidMarkdownWriter("doc/flowchart/Flowchart_{2}_{3}.md"));
+	).build(),
+	SpoonAnalyzer::new
+).parse().analyzeAll().write(new MermaidMarkdownWriter("doc/flowchart/Flowchart_{2}_{3}.md"));
 ```
 
 各クラスを継承するなどして調整できます。  
@@ -132,6 +132,10 @@ FlowNote.create(
 ## ライブラリの依存関係
 
 以下のライブラリを使用しています。  
+
+Spoon
+
+> https://spoon.gforge.inria.fr/
 
 JavaParser
 
@@ -168,35 +172,8 @@ zlibライセンス、MITライセンスでも利用できます。
 *	インターフェースや抽象クラスなどによる、未実装なメソッドの呼び出しは、  
 	実装が一意に特定できるときに限り、自動で解決されます。  
 
-## 解析できない？
-
-いくつかのケースで、メソッド呼び出しが解析できないことがあります。  
-
-多くは、クラスパスの不足で、自動的に読み飛ばされますが、  
-警告やエラーとしてメッセージが出力されることがあります。  
-
-警告は、現象が確認されているもの。  
-エラーは、現象が確認されていないものです。  
-
-原則、該当するメソッドの呼び出し先が、反映されないということになります。  
-呼び出し先にノードがなければ、問題にはならないかと思います。  
-
-詳細を確認したいときは、ShowResolutionFailureDetailsを有効にして実行してください。  
-以下のように、スタックトレースが表示されるようになります。  
-
-スタックトレースのサンプル。  
-
-```
-java.lang.NullPointerException: Cannot invoke "com.github.javaparser.resolution.types.ResolvedType.isReferenceType()" because "rightType" is null
-        at com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade.getBinaryTypeConcrete(JavaParserFacade.java:526)
-        at com.github.javaparser.symbolsolver.javaparsermodel.TypeExtractor.visit(TypeExtractor.java:139)
-        at com.github.javaparser.symbolsolver.javaparsermodel.TypeExtractor.visit(TypeExtractor.java:64)
-        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:140)
-        at com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade.getTypeConcrete(JavaParserFacade.java:563)
-        at com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade.getType(JavaParserFacade.java:424)
-        at com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade.solveArguments(JavaParserFacade.java:303)
-        at com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade.solve(JavaParserFacade.java:323)
-        at com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade.solve(JavaParserFacade.java:134)
-        at com.github.javaparser.symbolsolver.JavaSymbolSolver.resolveDeclaration(JavaSymbolSolver.java:190)
-        at com.github.javaparser.ast.expr.MethodCallExpr.resolve(MethodCallExpr.java:332)
-```
+*	通常は、ソースコードの読み込みに、Spoonを使用します。  
+	JavaParserを使用したい場合は、[Javaのプログラム内で実行する](#Javaのプログラム内で実行する)を参考にして、  
+	JavaParser用のSourceParserとAnalyzerを使用してください。  
+	また、ランタイムとして、JavaParserが必要になります。  
+	JavaParserでの動作は不安定だから、Spoonの使用を推奨します。  
