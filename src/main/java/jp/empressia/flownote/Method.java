@@ -17,7 +17,7 @@ public class Method {
 	public Method(String FullClassName, String PackageName, String Name, List<String> ParameterClassNames) {
 		this.FullClassName = FullClassName;
 		this.PackageName = PackageName;
-		this.ClassName = FullClassName.substring(PackageName.length());
+		this.ClassName = FullClassName.substring(PackageName.length() + ".".length());
 		this.Name = Name;
 		this.ParameterClassNames = ParameterClassNames;
 	}
