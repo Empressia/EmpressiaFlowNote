@@ -10,12 +10,17 @@ public class FlowComment {
 	/// ラベル。
 	public final String Label;
 
+	/// 位置。
+	public final Location Location;
+
 	/// コンストラクタ。
 	/// @param Message メッセージ。
 	/// @param Label ラベル。
-	public FlowComment(String Message, String Label) {
+	/// @param Location 位置。
+	public FlowComment(String Message, String Label, Location Location) {
 		this.Message = Message;
 		this.Label = Label;
+		this.Location = Location;
 	}
 
 }

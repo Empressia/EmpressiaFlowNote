@@ -6,13 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Predicate;
-import jp.empressia.flownote.FlowChart;
-import jp.empressia.flownote.FlowComment;
-import jp.empressia.flownote.FlowEdge;
-import jp.empressia.flownote.FlowNode;
-import jp.empressia.flownote.FlowNodeType;
-import jp.empressia.flownote.Method;
-import jp.empressia.flownote.SubFlowNode;
+import jp.empressia.flownote.*;
 import jp.empressia.flownote.parser.SourceParser;
 import jp.empressia.flownote.util.NodeUtilities;
 
@@ -48,7 +42,8 @@ public abstract class Analyzer<R extends SourceParser.Result<?, ?>> {
 		String ID = methodQualifiedSignature + "-" + nodeNumber;
 		String Name = comment.Message;
 		String IncomingLabel = comment.Label;
-		FlowNode node = new FlowNode(ID, Name, FlowNodeType.Process, IncomingLabel);
+		Location Location = comment.Location;
+		FlowNode node = new FlowNode(ID, Name, FlowNodeType.Process, IncomingLabel, Location);
 		return node;
 	}
 

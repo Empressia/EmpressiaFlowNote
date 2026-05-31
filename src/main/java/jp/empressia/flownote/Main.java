@@ -73,13 +73,17 @@ public class Main {
 		boolean renderDecisionAsProcess = configuration.RenderDecisionAsProcess;
 		boolean renderSubFlowNodeAsGroup = configuration.RenderSubflowAsGroup;
 		String basePackageName = configuration.BasePackageName;
+		String linkTemplate = configuration.LinkTemplate;
+		Path linkBasePath = (configuration.LinkBasePath != null) ? Path.of(configuration.LinkBasePath) : null;
 		MermaidMarkdownWriter writer = new MermaidMarkdownWriter(pathFormat)
 			.newline(newline)
 			.startNodeName(startNodeName)
 			.finishNodeName(finishNodeName)
 			.renderDecisionAsProcess(renderDecisionAsProcess)
 			.renderSubflowAsGroup(renderSubFlowNodeAsGroup)
-			.basePackageName(basePackageName);
+			.basePackageName(basePackageName)
+			.linkTemplate(linkTemplate)
+			.linkBasePath(linkBasePath);
 		FlowNote
 			.create(
 				SpoonSourceParser.Builder.create(sourceRootPaths, referencePaths)
@@ -131,6 +135,12 @@ public class Main {
 		/// 基準となるパッケージの名前を指定します。
 		@Option(names={"-BasePackageName", "--base-package-name"}, description="基準となるパッケージの名前を指定します。")
 		public String BasePackageName;
+		/// リンクのテンプレートを指定します。{Path}……パス、{Line}……行番号、{Column}……列番号。
+		@Option(names={"-LinkTemplate", "--link-template"}, description="リンクのテンプレートを指定します。{Path}……パス、{Line}……行番号、{Column}……列番号。")
+		public String LinkTemplate;
+		/// リンク用の基準となるパスを指定します。
+		@Option(names={"-LinkBasePath", "--link-base-path"}, description="リンク用の基準となるパスを指定します。")
+		public String LinkBasePath;
 	}
 
 }

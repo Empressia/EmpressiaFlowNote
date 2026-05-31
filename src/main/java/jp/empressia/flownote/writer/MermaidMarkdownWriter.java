@@ -1,6 +1,7 @@
 package jp.empressia.flownote.writer;
 
 import java.io.*;
+import java.nio.file.*;
 import java.util.*;
 import java.util.regex.*;
 import jp.empressia.flownote.*;
@@ -50,6 +51,14 @@ public class MermaidMarkdownWriter extends FileWriter {
 	private String BasePackageName;
 	public MermaidMarkdownWriter basePackageName(String BasePackageName) { this.BasePackageName = BasePackageName; return this; }
 
+	/// リンクのテンプレート。{Path}……パス、{Line}……行番号、{Column}……列番号。
+	public String LinkTemplate;
+	public MermaidMarkdownWriter linkTemplate(String LinkTemplate) { this.LinkTemplate = LinkTemplate; return this; }
+
+	/// リンク用の基準となるパス。指定なしで、出力先からの相対パス。
+	public Path LinkBasePath;
+	public MermaidMarkdownWriter linkBasePath(Path LinkBasePath) { this.LinkBasePath = LinkBasePath; return this; }
+
 	// 再帰呼び出しがあった場合に、
 	// 呼び出し先からの戻りと呼び出さない戻りの、
 	// 二通りが出力されるのを防ぐために、出力したEdge情報をキャッシュする。
@@ -79,13 +88,15 @@ public class MermaidMarkdownWriter extends FileWriter {
 		if(chart != null) {
 			LinkedList<FlowNode> allNodes = new LinkedList<FlowNode>();
 			NodeUtilities.collectNodes(method, charts, allNodes, null);
-			FlowNode startNode = new FlowNode("Start", this.StartNodeName, FlowNodeType.Terminator);
-			FlowNode finishNode = new FlowNode("Finish", this.FinishNodeName, FlowNodeType.Terminator);
+			FlowNode startNode = new FlowNode("Start", this.StartNodeName, FlowNodeType.Terminator, null);
+			FlowNode finishNode = new FlowNode("Finish", this.FinishNodeName, FlowNodeType.Terminator, null);
 			int indent = 1;
-			NodeWalker walker = new NodeWalker(charts, new NodeWalker.Handler(this::writeNode, this::writeSubgraphBegin, this::writeSubgraphEnd), this.RenderSubflowAsGroup);
-			this.writeNode(startNode, indent);
-			walker.walk(method, indent);
-			this.writeNode(finishNode, indent);
+			{
+				NodeWalker walker = new NodeWalker(charts, new NodeWalker.Handler(this::writeNode, this::writeSubgraphBegin, this::writeSubgraphEnd), this.RenderSubflowAsGroup);
+				this.writeNode(startNode, indent);
+				walker.walk(method, indent);
+				this.writeNode(finishNode, indent);
+			}
 			{
 				FlowEdge startEdge = new FlowEdge(startNode, chart.StartNode);
 				this.writeEdge(startEdge, charts);
@@ -96,6 +107,10 @@ public class MermaidMarkdownWriter extends FileWriter {
 			for(FlowNode node : chart.FinishNodes) {
 				FlowEdge finishEdge = new FlowEdge(node, finishNode);
 				this.writeEdge(finishEdge, charts);
+			}
+			if(this.LinkTemplate != null) {
+				NodeWalker walker = new NodeWalker(charts, new NodeWalker.Handler(this::writeLink, (n,p,i) -> {}, (n,p,i) -> {}), this.RenderSubflowAsGroup);
+				walker.walk(method, indent);
 			}
 		}
 		this.writeMermaidFooter();
@@ -223,6 +238,30 @@ public class MermaidMarkdownWriter extends FileWriter {
 					writer.append("	" + FromID + " --> " + Label + ToID + newLine);
 					this.PreviousEdge = realEdge;
 				}
+			}
+		} catch(IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
+	}
+
+	/// リンクを書き出します。
+	protected void writeLink(FlowNode node, int indent) {
+		BufferedWriter writer = this.getWriter();
+		String newLine = this.Newline;
+		try {
+			String ID = this.NodeIDPrefix + MermaidMarkdownWriter.convertNodeID(node.ID);
+			Location location = node.Location;
+			Path basePath = (this.LinkBasePath != null) ? this.LinkBasePath : this.getCurrnetPath();
+			Path path = (basePath.getParent() != null) ? basePath.toAbsolutePath().relativize(location.FilePath.toAbsolutePath()) : location.FilePath;
+			String separator = path.getFileSystem().getSeparator();
+			String link = this.LinkTemplate
+				.replace("{Column}", String.valueOf(location.ColumnNumber))
+				.replace("{Line}", String.valueOf(location.LineNumber))
+				.replace("{Path}", path.toString().replace(separator, "/"));
+			if(link.contains("\"") == false) {
+				writer.append("	".repeat(indent) + "click" + " " + ID + " " + "\"" + link + "\"" + newLine);
+			} else {
+				System.err.println("リンク[" + link + "]に『\"』が含まれて、リンクを出力できませんでした。");
 			}
 		} catch(IOException ex) {
 			throw new UncheckedIOException(ex);

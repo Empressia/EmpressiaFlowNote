@@ -13,6 +13,7 @@
 				"-s", "src/main/java/,src/test/java/",
 				"-o", "doc/flowchart/Flowchart_{2}_{3}.md",
 				"-t", "jp.empressia.flownote.sample.Sample01.",
+				"-LinkTemplate", "{Path}#L{Line}"
 			],
 			"projectName": "EmpressiaFlowNote",
 		}

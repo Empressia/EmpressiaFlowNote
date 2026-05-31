@@ -18,12 +18,16 @@ public class FlowNode {
 	/// 流入ラベル。
 	public final String IncomingLabel;
 
+	/// 位置。
+	public final Location Location;
+
 	/// コンストラクタ。
 	/// @param ID ID。
 	/// @param Name 名前。
 	/// @param Type タイプ（ノードとしての表現が未定のときはnull）。
-	public FlowNode(String ID, String Name, String Type) {
-		this(ID, Name, Type, null);
+	/// @param Location 位置。
+	public FlowNode(String ID, String Name, String Type, Location Location) {
+		this(ID, Name, Type, null, Location);
 	}
 
 	/// コンストラクタ。
@@ -31,11 +35,13 @@ public class FlowNode {
 	/// @param Name 名前。
 	/// @param Type タイプ（ノードとしての表現が未定のときはnull）。
 	/// @param IncomingLabel 流入ラベル。
-	public FlowNode(String ID, String Name, String Type, String IncomingLabel) {
+	/// @param Location 位置。
+	public FlowNode(String ID, String Name, String Type, String IncomingLabel, Location Location) {
 		this.ID = ID;
 		this.Name = Name;
 		this.Type = Type;
 		this.IncomingLabel = IncomingLabel;
+		this.Location = Location;
 	}
 
 	@Override

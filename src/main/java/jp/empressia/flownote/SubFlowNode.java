@@ -9,7 +9,7 @@ public class SubFlowNode extends FlowNode {
 
 	/// コンストラクタ。
 	public SubFlowNode(String ID, String Name, Method Method) {
-		super(ID, Name, null);
+		super(ID, Name, null, null);
 		this.Method = Method;
 	}
 

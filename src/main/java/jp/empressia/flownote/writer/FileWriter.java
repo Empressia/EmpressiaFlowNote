@@ -17,6 +17,8 @@ public abstract class FileWriter implements IWriter {
 
 	/// 現在のWriterのパス。
 	private Path CurrnetPath;
+	/// 現在のWriterのパス。
+	protected Path getCurrnetPath() { return this.CurrnetPath; }
 	/// 現在のWriter。
 	private BufferedWriter Writer;
 	/// 現在のWriter。

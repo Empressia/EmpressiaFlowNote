@@ -114,7 +114,7 @@ public class SpoonAnalyzer extends Analyzer<SpoonSourceParser.Result> {
 					)::iterator;
 				int nodeNumber = 0;
 				for(CtComment comment : comments) {
-					FlowComment fc = this.CommentHelper.convert(comment.getRawContent());
+					FlowComment fc = SpoonAnalyzer.createFlowComment(comment, this.CommentHelper);
 					if(fc != null) {
 						FlowNode node = this.createFlowCommentNode(fc, method, ++nodeNumber);
 						flowCommentNodes.put(comment.getPosition().getLine(), node);
@@ -154,7 +154,7 @@ public class SpoonAnalyzer extends Analyzer<SpoonSourceParser.Result> {
 				List<CtComment> comments = e.getComments();
 				CtComment comment = (comments.isEmpty() == false) ? comments.getLast() : null;
 				boolean chained = false;
-				if((comment == null) || (SpoonAnalyzer.this.CommentHelper.convert(comment.getRawContent()) == null)) {
+				if((comment == null) || (SpoonAnalyzer.this.CommentHelper.isFlowComment(comment.getRawContent()) == false)) {
 					CtComment parentComment = null;
 					{
 						CtElement element = e;
@@ -163,7 +163,7 @@ public class SpoonAnalyzer extends Analyzer<SpoonSourceParser.Result> {
 							if((element != null) && (element instanceof CtIf ife)) {
 								List<CtComment> parentComments = ife.getComments();
 								parentComment = (parentComments.isEmpty() == false) ? parentComments.getLast() : null;
-								if((parentComment == null) || (SpoonAnalyzer.this.CommentHelper.convert(parentComment.getRawContent()) == null)) {
+								if((parentComment == null) || (SpoonAnalyzer.this.CommentHelper.isFlowComment(parentComment.getRawContent()) == false)) {
 									continue;
 								} else {
 									break;
@@ -393,6 +393,23 @@ public class SpoonAnalyzer extends Analyzer<SpoonSourceParser.Result> {
 				e -> e.getValue().get(0)
 			));
 		return map;
+	}
+
+	/// コメントからFlowCommentを作成します。FlowCommentではないときは、nullになります。
+	private static FlowComment createFlowComment(CtComment comment, FlowCommentHelper helper) {
+		FlowComment fc;
+		FlowCommentHelper.Parsed p = helper.parse(comment.getRawContent());
+		if(p != null) {
+			Location location = new Location(
+				comment.getPosition().getFile().toPath(),
+				comment.getPosition().getLine(),
+				comment.getPosition().getColumn()
+			);
+			fc = p.create(location);
+		} else {
+			fc = null;
+		}
+		return fc;
 	}
 
 }

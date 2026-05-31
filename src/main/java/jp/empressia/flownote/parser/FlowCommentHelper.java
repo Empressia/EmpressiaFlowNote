@@ -27,14 +27,44 @@ public class FlowCommentHelper {
 	public FlowCommentHelper() { this(FlowCommentHelper.DEFAULT_MARKER_KEYWORD); }
 
 	/// ラインコメントをFlowCommentに変換します。変換できないときは、nullです。
-	public FlowComment convert(String comment) {
+	public Parsed parse(String comment) {
 		if(comment.startsWith(this.FlowCommentPrefix) == false) { return null; }
 		Matcher m;
 		m = this.FlowCommentRegex.matcher(comment);
-		if(m.matches()) { return new FlowComment(m.group(1), null); }
+		if(m.matches()) { return new Parsed(m.group(1), null); }
 		m = this.FlowCommentWithLabelRegex.matcher(comment);
-		if(m.matches()) { return new FlowComment(m.group(2), m.group(1)); }
+		if(m.matches()) { return new Parsed(m.group(2), m.group(1)); }
 		return null;
+	}
+
+	/// ラインコメントをFlowCommentに変換できるかどうか。
+	public boolean isFlowComment(String comment) {
+		if(comment.startsWith(this.FlowCommentPrefix) == false) { return false; }
+		Matcher m;
+		m = this.FlowCommentRegex.matcher(comment);
+		if(m.matches()) { return true; }
+		m = this.FlowCommentWithLabelRegex.matcher(comment);
+		if(m.matches()) { return true; }
+		return false;
+	}
+
+	/// FlowCommentを生成する元となるクラスです。
+	/// @author すふぃあ
+	public static class Parsed {
+		/// メッセージ。
+		public final String Message;
+		/// ラベル。
+		public final String Label;
+		/// コンストラクタです。
+		public Parsed(String Message, String Label) {
+			this.Message = Message;
+			this.Label = Label;
+		}
+		/// FlowCommentを作成します。
+		/// @param location 位置。
+		public FlowComment create(Location location) {
+			return new FlowComment(this.Message, this.Label, location);
+		}
 	}
 
 }

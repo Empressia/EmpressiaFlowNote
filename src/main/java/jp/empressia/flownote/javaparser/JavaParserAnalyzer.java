@@ -123,7 +123,7 @@ public class JavaParserAnalyzer extends Analyzer<JavaParserSourceParser.Result> 
 					)::iterator;
 				int nodeNumber = 0;
 				for(Comment comment : comments) {
-					FlowComment fc = this.CommentHelper.convert(comment.asString());
+					FlowComment fc = JavaParserAnalyzer.createFlowComment(comment, this.CommentHelper);
 					if(fc != null) {
 						FlowNode node = this.createFlowCommentNode(fc, method, ++nodeNumber);
 						flowCommentNodes.put(comment.getBegin().get().line, node);
@@ -162,14 +162,14 @@ public class JavaParserAnalyzer extends Analyzer<JavaParserSourceParser.Result> 
 				// 手前にFlowNodeIfがあれば、その対象がここってしてもいいかも。
 				Comment comment = n.getComment().orElse(null);
 				boolean chained = false;
-				if((comment == null) || (JavaParserAnalyzer.this.CommentHelper.convert(comment.asString()) == null)) {
+				if((comment == null) || (JavaParserAnalyzer.this.CommentHelper.isFlowComment(comment.asString()) == false)) {
 					Comment parentComment = null;
 					{
 						Node node = n;
 						while((node = node.getParentNode().orElse(null)) != null) {
 							if((node != null) && (node instanceof IfStmt ifn)) {
 								parentComment = ifn.getComment().orElse(null);
-								if((parentComment == null) || (JavaParserAnalyzer.this.CommentHelper.convert(parentComment.asString()) == null)) {
+								if((parentComment == null) || (JavaParserAnalyzer.this.CommentHelper.isFlowComment(parentComment.asString()) == false)) {
 									continue;
 								} else {
 									break;
@@ -484,6 +484,23 @@ public class JavaParserAnalyzer extends Analyzer<JavaParserSourceParser.Result> 
 				e -> e.getValue().get(0)
 			));
 		return map;
+	}
+
+	/// コメントからFlowCommentを作成します。FlowCommentではないときは、nullになります。
+	private static FlowComment createFlowComment(Comment comment, FlowCommentHelper helper) {
+		FlowComment fc;
+		FlowCommentHelper.Parsed p = helper.parse(comment.asString());
+		if(p != null) {
+			Location location = new Location(
+				comment.findCompilationUnit().get().getStorage().get().getPath(),
+				comment.getBegin().get().line,
+				comment.getBegin().get().column
+			);
+			fc = p.create(location);
+		} else {
+			fc = null;
+		}
+		return fc;
 	}
 
 }
